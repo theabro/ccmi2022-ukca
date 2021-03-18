@@ -56,23 +56,30 @@ def CCMI2022_callback(cube, field, filename):
 
 
 # function to save to NetCDF
-def save_field(cube):
+def save_field(cube, ga, start_time, end_time):
     # will need to update name to correct conventions
-    ofile=odir+'/'+str(cube.var_name)+'/'+str(cube.var_name)+'.nc'
+    opath=odir+'/'+ga.gen_dirname()
+    try:
+        os.makedirs(opath, exist_ok=True)
+    except OSError:
+        print ('Creation of the directory %s failed' % opath)
+    else:
+        print ('Successfully created the directory %s' % opath)
+
+    ofile=opath+'/'+ga.gen_filename(start_time,end_time)
     # check if file exists, if so, remove it so it can be saved
     if os.path.exists(ofile):
         os.remove(ofile)
 
     # set-up saver
-    saver = iris.fileformats.netcdf.Saver(filename=ofile, netcdf_format='NETCDF4')
+    saver = iris.fileformats.netcdf.Saver(filename=ofile, netcdf_format='NETCDF4_CLASSIC')
     # add global attributes as required
-    saver.update_global_attributes(Conventions=iris.fileformats.netcdf.CF_CONVENTIONS_VERSION) #,attributes=global_attributes)
+    saver.update_global_attributes(Conventions=iris.fileformats.netcdf.CF_CONVENTIONS_VERSION, attributes=ga.attrs)
 
     # actually save the field, including local attributes as required
     # not sure if `deflate=1` is equivalent to `complevel=1`. This is the 
     # lowest compression level (default is 4, 9 is highest)
-    saver.write(cube, zlib=True, shuffle=True, complevel=1, local_keys=['comment', 'dimensions', 'cell_measures', 'frequency', 'modeling_realm', 'type', 'positive', 'valid_min', 'valid_max'])
-
+    saver.write(cube, zlib=True, shuffle=True, complevel=1, unlimited_dimensions=['time'], local_keys=['comment', 'dimensions', 'cell_measures', 'frequency', 'modeling_realm', 'type', 'positive', 'valid_min', 'valid_max'])
 
 
 # test reading-in
@@ -81,9 +88,11 @@ field=iris.load_cube(ppdir+'/'+ppfiles,iris.AttributeConstraint(STASH=STASHcode)
 start_time=str(field.coord('time').units.num2date(field.coord('time').bounds[0,0])).split(' ')[0].replace('-','')
 end_time=str(field.coord('time').units.num2date(field.coord('time').bounds[-1,-1])).split(' ')[0].replace('-','')
 
-ga=global_attrs(suiteid,str(field.var_name),iris.__version__,member=ens_member)
+iris_version=str(iris.__version__)
+
+ga=global_attrs.global_attrs(suiteid,str(field.var_name),iris_version,member=ens_member)
 
 # save variable to NetCDF in correct directory
-save_field(field)
+save_field(field, ga, start_time, end_time)
 
 

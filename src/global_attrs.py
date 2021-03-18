@@ -25,7 +25,7 @@ import uuid
 class global_attrs():
     def __init__(self, suiteid, variable_name, iris_version, member=1):
         self.attrs = {
-            'activity_id': 'CCMI2022'
+            'activity_id': 'CCMI2022',
             'contact': 'N. Luke Abraham <n.luke.abraham@ncas.ac.uk> ',
             'creation_date': '',  # a string representation of the date when the netCDF file was created in the format: 'YYYY-MM-DD-THH:MM:SSZ'. The 'T' and 'Z' are not modified, but the other variables are replaced with the correct time stamp. If using CMOR, this is generated automatically.'
             'data_specs_version': '01.00.00', # ‘01.00.00’ or similar (see variable tables for exact number)
@@ -53,7 +53,7 @@ class global_attrs():
             'sub_experiment_id': 'none',
             'table_id': 'Amon', # see other options
             'tracking_id': '',  # To allow for possible future publication to the ESGF, tracking_id should be of the form “hdl:21.14100/<uuid>” (e.g., “hdl:21.14100/02d9e6d5-9467-382e-8f9b-9300a64ac3cd”). The tracking_id should be unique for each file. The <uuid> should be generated using the OSSP utility which supports a number of different DCE 1.1 variant UUID options. Here version 4 (random number based) is required. Download the software from http://www.ossp.org/pkg/lib/uuid/.
-            'history': '',  # 'Extracted from files jobida.p*.pp-jobida.p*.pp'
+            'history': '',  
             #'references': """Some References.""",
             'variable_id': variable_name, # ‘ta’, ‘o3’, ‘ch4’, … Variable name as specified in the data request.
             'variant_label': '', # ‘r3i1p1f1’,… Combining realization_index, initialization_index, physics_index and forcing_index
@@ -69,9 +69,9 @@ class global_attrs():
 
         # need to pass a list to set_attrs
         if isinstance(suiteid,str):
-            self.set_attrs([suiteid])
+            self.set_attrs([suiteid], iris_version)
         elif isinstance(suiteid,list):
-            self.set_attrs(suiteid)
+            self.set_attrs(suiteid, iris_version)
             
 
     def set_attrs(self, suiteid, iris_version):
@@ -79,12 +79,12 @@ class global_attrs():
         self.attrs['creation_date'] = datetime.now().strftime('%Y-%m-%d-T%H:%M:%SZ')
         self.attrs['tracking_id'] = str(uuid.uuid4())
         # set some further information in the 
-        self.attrs['history'] = 'Model suite-ID(s) = %s. Created using Iris version %s.' % (', '.join(jobid), iris_version)
+        self.attrs['history'] = 'Model suite-ID(s) = %s. Created using Iris version %s.' % (', '.join(suiteid), iris_version)
         self.attrs['variant_label'] = 'r' + str(self.attrs['realization_index']) + 'i' + str(self.attrs['initialization_index']) + 'p' + str(self.attrs['physics_index']) + 'f' + str(self.attrs['forcing_index'])
 
-    def gen_dirname(self, variable_name):
+    def gen_dirname(self):
         dirname = [
-            self.attrs['table_id'],                 # CCMI2022
+            self.attrs['activity_id'],                 # CCMI2022
             self.attrs['product'],                  # model-output
             self.attrs['institute_id'],             # U-CAMBRIDGE
             self.attrs['source_id'],                # UMUKCA-UCAM
@@ -96,7 +96,8 @@ class global_attrs():
             'v' + str(self.attrs['data_version']),  # v20210317
             self.attrs['variable_id']               # toz
         ]
-        return os.path.join(dirname)
+    
+        return os.path.join('',*dirname)
 
     def gen_filename(self,start_time,end_time):
         #filename = <variable_id>_<table_id>_<source_id>_<experiment_id>_<variant_label>_<grid_label>[_<time_range>].nc
