@@ -4,12 +4,18 @@ import iris
 import json
 import os
 import global_attrs
+import numpy as np
 
 # variable to consider - test with ozone column (toz) at the moment
-suiteid='u-cb159'
+# will move this to an input file at some point
+suiteid=['u-cb159','u-cd315']
+var='toz'
+in_units='DU'
+conversion_factor=1.0e-5
 ens_member=1
-ppdir='/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022/'+suiteid+'/apn.pp'
-ppfiles='*2014*.pp'
+ppdir='/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022'
+ppstream='apn.pp'
+ppfiles='*.pp'
 STASHcode='m01s50i219'
 odir='/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022/upload'
 
@@ -24,11 +30,9 @@ with open(json_dir+'/'+json_file) as json_file:
 
 # develop callback for use when reading fils from pp
 def CCMI2022_callback(cube, field, filename):
-    var=''
-    if cube.attributes['STASH'] == 'm01s50i219':
-        var='toz'
-        cube.attributes['in_units']=str('DU')
-
+    # define input units to be used in conversioon routine
+    cube.attributes['in_units']=in_units
+    cube.attributes['conversion_factor']=conversion_factor
     # The following should apply to all cubes read-in, take values from json
     cube.rename(name=str(variables['variable_entry'][var]['out_name']))
     cube.units=str(variables['variable_entry'][var]['units'])
@@ -81,9 +85,24 @@ def save_field(cube, ga, start_time, end_time):
     # lowest compression level (default is 4, 9 is highest)
     saver.write(cube, zlib=True, shuffle=True, complevel=1, unlimited_dimensions=['time'], local_keys=['comment', 'dimensions', 'cell_measures', 'frequency', 'modeling_realm', 'type', 'positive', 'valid_min', 'valid_max'])
 
+    print('File saved to %s' % opath+'/'+ofile)
+
+def convert_units(cube):
+    if ((cube.attributes['in_units'] == str(cube.units)) or 
+        (cube.attributes['conversion_factor'] == 1)):
+        # do nothing, input units are the same as required
+        return cube
+
+    cube.data=( cube.data / np.float64(cube.attributes['conversion_factor']) )
+    return cube
+    
+
+plist=[]
+for i in suiteid:
+    plist.append(ppdir+'/'+i+'/'+ppstream+'/'+ppfiles)
 
 # test reading-in
-field=iris.load_cube(ppdir+'/'+ppfiles,iris.AttributeConstraint(STASH=STASHcode),callback=CCMI2022_callback)
+field=iris.load_cube(plist,iris.AttributeConstraint(STASH=STASHcode),callback=CCMI2022_callback)
 
 start_time=str(field.coord('time').units.num2date(field.coord('time').bounds[0,0])).split(' ')[0].replace('-','')
 end_time=str(field.coord('time').units.num2date(field.coord('time').bounds[-1,-1])).split(' ')[0].replace('-','')
@@ -91,6 +110,8 @@ end_time=str(field.coord('time').units.num2date(field.coord('time').bounds[-1,-1
 iris_version=str(iris.__version__)
 
 ga=global_attrs.global_attrs(suiteid,str(field.var_name),iris_version,member=ens_member)
+
+field=convert_units(field)
 
 # save variable to NetCDF in correct directory
 save_field(field, ga, start_time, end_time)

@@ -26,7 +26,7 @@ class global_attrs():
     def __init__(self, suiteid, variable_name, iris_version, member=1):
         self.attrs = {
             'activity_id': 'CCMI2022',
-            'contact': 'N. Luke Abraham <n.luke.abraham@ncas.ac.uk> ',
+            'contact': 'N. Luke Abraham <n.luke.abraham@ncas.ac.uk>, James Keeble <james.keeble@ncas.ac.uk> ',
             'creation_date': '',  # a string representation of the date when the netCDF file was created in the format: 'YYYY-MM-DD-THH:MM:SSZ'. The 'T' and 'Z' are not modified, but the other variables are replaced with the correct time stamp. If using CMOR, this is generated automatically.'
             'data_specs_version': '01.00.00', # ‘01.00.00’ or similar (see variable tables for exact number)
             'data_version': '20210317', # may be changed, e.g. for corrections
@@ -46,8 +46,8 @@ class global_attrs():
             'product': 'model-output',
             'realization_index': member,  # (for first set - this will change if we do additional ensemble members)
             'realm': 'atmos', # ‘atmos’, ‘land’
-            'source': 'UMUKCA-UCAM:\natmos: UKESM1 (N96L85; model top 85km) \natmosChem: StratTrop chemistry with improvements \nland: JULES \nocean: NEMO (ORCA1) \nseaIce CICE',
-            'source_id': 'UMUKCA-UCAM', # as registered
+            'source': 'UKESM1-StratTrop2:\natmos: UKESM1 (N96L85; model top 85km) \natmosChem: StratTrop chemistry with improvements \nland: JULES \nocean: NEMO (ORCA1) \nseaIce CICE',
+            'source_id': 'UKESM1-StratTrop2', # as registered
             'source_type': 'AER AGCM CHEM',
             'sub_experiment': 'none',
             'sub_experiment_id': 'none',
@@ -84,10 +84,10 @@ class global_attrs():
 
     def gen_dirname(self):
         dirname = [
-            self.attrs['activity_id'],                 # CCMI2022
+            self.attrs['activity_id'],              # CCMI2022
             self.attrs['product'],                  # model-output
             self.attrs['institute_id'],             # U-CAMBRIDGE
-            self.attrs['source_id'],                # UMUKCA-UCAM
+            self.attrs['source_id'],                # UKESM1-StratTrop2
             self.attrs['experiment_id'],            # refD1
             self.attrs['frequency'],                # mon
             self.attrs['realm'],                    # atmos
