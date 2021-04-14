@@ -6,6 +6,18 @@ import os
 import global_attrs
 import numpy as np
 
+# define directories containing things
+# output directory
+odir='/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022/upload'
+# JSON directories:
+#  Tables directory for CCMI-2022 - provided from https://github.com/cedadev/ccmi-2022
+json_dir='/home/users/nlabraham/git/ccmi-2022/Tables'
+#  definitions of ensemble members
+ens_dir='/home/users/nlabraham/git/ccmi2022-ukca/ens'
+#  UKESM1 variables
+var_dir='/home/users/nlabraham/git/ccmi2022-ukca/vars'
+
+
 # variable to consider - test with ozone column (toz) at the moment
 # will move this to an input file at some point
 suiteid=['u-cb159','u-cd315']
@@ -17,20 +29,18 @@ ppdir='/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022'
 ppstream='apn.pp'
 ppfiles='*.pp'
 STASHcode='m01s50i219'
-odir='/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022/upload'
 
 stream='Amon'
 
 
-# read-in JSON information - provided from https://github.com/cedadev/ccmi-2022
-json_dir='/home/users/nlabraham/git/ccmi-2022/Tables'
+# read-in JSON information
 json_file='CCMI2022_'+stream+'.json'
 with open(json_dir+'/'+json_file) as json_file:
     variables=json.load(json_file)
 
 # develop callback for use when reading fils from pp
 def CCMI2022_callback(cube, field, filename):
-    # define input units to be used in conversioon routine
+    # define input units to be used in conversion routine
     cube.attributes['in_units']=in_units
     cube.attributes['conversion_factor']=conversion_factor
     # The following should apply to all cubes read-in, take values from json

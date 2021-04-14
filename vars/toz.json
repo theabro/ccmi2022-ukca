@@ -1,0 +1,8 @@
+{
+    "VARS": {
+        "var": "toz",
+	"in_units": "DU",
+	"conversion_factor": 1.0e-5,
+	"STASHcode": "m01s50i219"
+    }
+}
