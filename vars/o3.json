@@ -1,0 +1,8 @@
+{
+    "VARS": {
+        "var": "o3",
+	"in_units": "kg kg-1",
+	"conversion_factor": 1.657,
+	"STASHcode": "m01s34i001"
+    }
+}

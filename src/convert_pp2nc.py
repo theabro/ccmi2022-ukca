@@ -9,19 +9,19 @@ import argparse
 import datetime
 
 # pp files to take
-ppfiles='*201[45]*.pp'
+ppfiles='*.pp'
 
 
 # read-in command-line arguments, if required
 def get_opts():
     parser = argparse.ArgumentParser(description='Convert UKESM1-StratTrop2 PP files to NETCDF4 for CCMI-2022')
-    parser.add_argument('-o', '--odir', type=str, nargs=1, default='/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022/upload', help='Name of output directory')
-    parser.add_argument('-s', '--stream', type=str, nargs=1, default='Amon', choices=['A10dayPt', 'Aday', 'AdayZ', 'Amon', 'AmonZ'], help='Output frequency stream')
-    parser.add_argument('-j', '--json_dir', type=str, nargs=1, default='/home/users/nlabraham/git/ccmi-2022/Tables', help='Name of CCMI-2022 JSON Tables directory')
-    parser.add_argument('-e', '--ens_dir', type=str, nargs=1, default='/home/users/nlabraham/git/ccmi2022-ukca/ens', help='Name of UKESM1-StratTrop2 JSON ensemble members directory')
-    parser.add_argument('-r', '--ens_file', type=str, nargs=1, default='r1i1p1f2.json', help='Name of UKESM1-StratTrop2 JSON ensemble member file (e.g. r1i1p1f2.json)')
-    parser.add_argument('-v', '--var_dir', type=str, nargs=1, default='/home/users/nlabraham/git/ccmi2022-ukca/vars', help='Name of UKESM1-StratTrop2 JSON variables directory')
-    parser.add_argument('-f', '--var_file', type=str, nargs=1, default='toz.json', help='Name of UKESM1-StratTrop2 JSON variable file (e.g. toz.json)')
+    parser.add_argument('-o', '--odir', type=str, default='/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022/upload', help='Name of output directory')
+    parser.add_argument('-s', '--stream', type=str, default='Amon', choices=['A10dayPt', 'Aday', 'AdayZ', 'Amon', 'AmonZ'], help='Output frequency stream')
+    parser.add_argument('-j', '--json_dir', type=str, default='/home/users/nlabraham/git/ccmi-2022/Tables', help='Name of CCMI-2022 JSON Tables directory')
+    parser.add_argument('-e', '--ens_dir', type=str, default='/home/users/nlabraham/git/ccmi2022-ukca/ens', help='Name of UKESM1-StratTrop2 JSON ensemble members directory')
+    parser.add_argument('-r', '--ens_file', type=str, default='r1i1p1f2.json', help='Name of UKESM1-StratTrop2 JSON ensemble member file (e.g. r1i1p1f2.json)')
+    parser.add_argument('-v', '--var_dir', type=str, default='/home/users/nlabraham/git/ccmi2022-ukca/vars', help='Name of UKESM1-StratTrop2 JSON variables directory')
+    parser.add_argument('-f', '--var_file', type=str, default='toz.json', help='Name of UKESM1-StratTrop2 JSON variable file (e.g. toz.json)')
     return parser.parse_args()
 
 
@@ -117,7 +117,7 @@ def main(args):
     stream=args.stream
     var_file=args.var_file
     ens_file=args.ens_file
-    
+
     
     # read-in variable information from JSON file
     with open(var_dir+'/'+var_file) as json_file:
