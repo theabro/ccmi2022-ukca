@@ -19,7 +19,7 @@ def get_opts():
     parser.add_argument('-s', '--stream', type=str, default='Amon', choices=['A10dayPt', 'Aday', 'AdayZ', 'Amon', 'AmonZ'], help='Output frequency stream')
     parser.add_argument('-j', '--json_dir', type=str, default='/home/users/nlabraham/git/ccmi-2022/Tables', help='Name of CCMI-2022 JSON Tables directory')
     parser.add_argument('-e', '--ens_dir', type=str, default='/home/users/nlabraham/git/ccmi2022-ukca/ens', help='Name of UKESM1-StratTrop2 JSON ensemble members directory')
-    parser.add_argument('-r', '--ens_file', type=str, default='r1i1p1f2.json', help='Name of UKESM1-StratTrop2 JSON ensemble member file (e.g. r1i1p1f2.json)')
+    parser.add_argument('-r', '--ens_file', type=str, default='refD1_r1i1p1f2_apn.json', help='Name of UKESM1-StratTrop2 JSON ensemble member file (e.g. refD1_r1i1p1f2_apn.json)')
     parser.add_argument('-v', '--var_dir', type=str, default='/home/users/nlabraham/git/ccmi2022-ukca/vars', help='Name of UKESM1-StratTrop2 JSON variables directory')
     parser.add_argument('-f', '--var_file', type=str, default='toz.json', help='Name of UKESM1-StratTrop2 JSON variable file (e.g. toz.json)')
     return parser.parse_args()
@@ -127,6 +127,7 @@ def main(args):
     in_units=str(variable['VARS']['in_units'])
     conversion_factor=np.float(variable['VARS']['conversion_factor'])
     STASHcode=str(variable['VARS']['STASHcode'])
+    grid_label=str(variable['VARS']['grid_label'])
     
     
     # read-in ensemble member information from JSON file
@@ -137,6 +138,7 @@ def main(args):
     suiteid=ens['EM']['suiteid']
     ppdir=str(ens['EM']['ppdir'])
     ppstream=str(ens['EM']['ppstream'])
+    expt_id=str(ens['EM']['expt_id'])
     
     
     # read-in JSON information
@@ -157,7 +159,7 @@ def main(args):
     # required for metadata
     iris_version=str(iris.__version__)
     # define global attributes for output file
-    ga=global_attrs.global_attrs(suiteid,str(field.var_name),iris_version,member=ens_member)
+    ga=global_attrs.global_attrs(suiteid, str(field.var_name), iris_version, member=ens_member, table=stream, expt_id=expt_id, grid_label=grid_label)
     # convert units of data if required
     field=convert_units(field)
     

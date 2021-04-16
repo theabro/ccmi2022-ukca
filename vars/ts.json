@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "ts",
+	"in_units": "K",
+	"conversion_factor": 1,
+	"STASHcode": "m01s00i024",
+	"grid_label": "gn"
+    }
+}

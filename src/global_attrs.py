@@ -23,19 +23,19 @@ from datetime import datetime
 import uuid
 
 class global_attrs():
-    def __init__(self, suiteid, variable_name, iris_version, member=1):
+    def __init__(self, suiteid, variable_name, iris_version, member=1, table='Amon', expt_id='refD1', grid_label='gn'):
         self.attrs = {
             'activity_id': 'CCMI2022',
-            'contact': 'N. Luke Abraham <n.luke.abraham@ncas.ac.uk>, James Keeble <james.keeble@ncas.ac.uk> ',
+            'contact': 'N. Luke Abraham <n.luke.abraham@ncas.ac.uk>, James Keeble <james.keeble@ncas.ac.uk>',
             'creation_date': '',  # a string representation of the date when the netCDF file was created in the format: 'YYYY-MM-DD-THH:MM:SSZ'. The 'T' and 'Z' are not modified, but the other variables are replaced with the correct time stamp. If using CMOR, this is generated automatically.'
             'data_specs_version': '01.00.00', # ‘01.00.00’ or similar (see variable tables for exact number)
             'data_version': '20210317', # may be changed, e.g. for corrections
             'experiment': 'Hindcast', # ‘Hindcast’, ‘Baseline projection using…’ (see CV.json for permitted options)
-            'experiment_id': 'refD1', # ‘refD1’, ‘refD2’, ‘senD2-geo’, ‘senD2-ssp126’, ‘senD2-ssp370’
+            'experiment_id': expt_id, # ‘refD1’, ‘refD2’, ‘senD2-geo’, ‘senD2-ssp126’, ‘senD2-ssp370’
             'forcing_index': 2,
             'frequency': 'mon',  # e.g. 'yr', 'mon', 'day', 'subhr', 'fx' (for time-independent fields). Most of this data will be 'mon'. It's probably possible to work this out from the time points of the data.',
             'grid': 'N96L85 hybrid-theta (1.25 latitude by 1.875 longitude with 85 vertical levels up to 85km)',
-            'grid_label': 'gn', # ‘gm’, ‘gn’, ‘gnz’, ‘gr’ (see CV.json for permitted options)
+            'grid_label': grid_label, # ‘gm’, ‘gn’, ‘gnz’, ‘gr’ (see CV.json for permitted options)
             'initialization_index': 1,
             'institute_id': 'U-CAMBRIDGE',
             'institution': 'National Centre for Atmospheric Science, Department of Chemistry, University of Cambridge, Lensfield Road, Cambridgre, CB2 1EW U.K.',
@@ -51,7 +51,7 @@ class global_attrs():
             'source_type': 'AER AGCM CHEM',
             'sub_experiment': 'none',
             'sub_experiment_id': 'none',
-            'table_id': 'Amon', # see other options
+            'table_id': table, # see other options
             'tracking_id': '',  # To allow for possible future publication to the ESGF, tracking_id should be of the form “hdl:21.14100/<uuid>” (e.g., “hdl:21.14100/02d9e6d5-9467-382e-8f9b-9300a64ac3cd”). The tracking_id should be unique for each file. The <uuid> should be generated using the OSSP utility which supports a number of different DCE 1.1 variant UUID options. Here version 4 (random number based) is required. Download the software from http://www.ossp.org/pkg/lib/uuid/.
             'history': '',  
             #'references': """Some References.""",

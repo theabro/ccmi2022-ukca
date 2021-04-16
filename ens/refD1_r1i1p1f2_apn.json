@@ -6,6 +6,7 @@
 	    "u-cd315"
         ],
 	"ppdir": "/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022",
-	"ppstream": "apn.pp"
+	"ppstream": "apn.pp",
+	"expt_id": "refD1"
     }
 }

@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "h2o",
+	"in_units": "kg kg-1",
+	"conversion_factor": 0.6213,
+	"STASHcode": "m01s00i010",
+	"grid_label": "gn"
+    }
+}
