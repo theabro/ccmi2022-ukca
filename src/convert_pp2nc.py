@@ -10,6 +10,10 @@ import datetime
 
 # pp files to take
 ppfiles='*.pp'
+#ppfiles='*201[45]*.pp'
+
+# model name - used as a lookup
+model_name='UKESM1-StratTrop'
 
 
 # read-in command-line arguments, if required
@@ -139,12 +143,18 @@ def main(args):
     ppdir=str(ens['EM']['ppdir'])
     ppstream=str(ens['EM']['ppstream'])
     expt_id=str(ens['EM']['expt_id'])
+    source_type=str(ens['EM']['source_type'])
     
     
     # read-in JSON information
     json_file='CCMI2022_'+stream+'.json'
     with open(json_dir+'/'+json_file) as json_file:
         entries=json.load(json_file)
+
+    # read-in JSON CV information
+    json_file='CCMI2022_CV.json'
+    with open(json_dir+'/'+json_file) as json_file:
+        CV=json.load(json_file)
     
     # create list of files to read, might be in several directories
     plist=[]
@@ -159,7 +169,7 @@ def main(args):
     # required for metadata
     iris_version=str(iris.__version__)
     # define global attributes for output file
-    ga=global_attrs.global_attrs(suiteid, str(field.var_name), iris_version, member=ens_member, table=stream, expt_id=expt_id, grid_label=grid_label)
+    ga=global_attrs.global_attrs(suiteid, str(field.var_name), iris_version, CV, member=ens_member, table=stream, expt_id=expt_id, grid_label=grid_label, source_type=source_type, model_name=model_name)
     # convert units of data if required
     field=convert_units(field)
     

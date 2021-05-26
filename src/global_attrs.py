@@ -23,7 +23,7 @@ from datetime import datetime
 import uuid
 
 class global_attrs():
-    def __init__(self, suiteid, variable_name, iris_version, member=1, table='Amon', expt_id='refD1', grid_label='gn'):
+    def __init__(self, suiteid, variable_name, iris_version, CV, member=1, table='Amon', expt_id='refD1', grid_label='gn', source_type='AER AGCM CHEM', model_name='UKESM1-StratTrop'):
         self.attrs = {
             'activity_id': 'CCMI2022',
             'contact': 'N. Luke Abraham <n.luke.abraham@ncas.ac.uk>, James Keeble <james.keeble@ncas.ac.uk>',
@@ -37,18 +37,18 @@ class global_attrs():
             'grid': 'N96L85 hybrid-theta (1.25 latitude by 1.875 longitude with 85 vertical levels up to 85km)',
             'grid_label': grid_label, # ‘gm’, ‘gn’, ‘gnz’, ‘gr’ (see CV.json for permitted options)
             'initialization_index': 1,
-            'institute_id': 'U-CAMBRIDGE',
+            'institute_id': str(CV['CV']['source_id'][model_name]['institution_id']),
             'institution': 'National Centre for Atmospheric Science, Department of Chemistry, University of Cambridge, Lensfield Road, Cambridgre, CB2 1EW U.K.',
-            'license': 'CCMI2022 model data produced by U-CAMBRIDGE is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (https://creativecommons.org/licenses). Consult http://blogs.reading.ac.uk/ccmi/ for terms of use governing CCMI output, including citation requirements and proper acknowledgment. The data producers and data providers make no warranty, either express or implied, including, but not limited to, warranties of merchantability and fitness for a particular purpose. All liabilities arising from the supply of the information (including any liability arising in negligence) are excluded to the fullest extent permitted by law.', # see pdf doc - may want to tweak
+            'license': 'CCMI2022 model data produced by '+str(CV['CV']['source_id']['UKESM1-StratTrop']['institution_id'])+' is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (https://creativecommons.org/licenses). Consult http://blogs.reading.ac.uk/ccmi/ for terms of use governing CCMI output, including citation requirements and proper acknowledgment. The data producers and data providers make no warranty, either express or implied, including, but not limited to, warranties of merchantability and fitness for a particular purpose. All liabilities arising from the supply of the information (including any liability arising in negligence) are excluded to the fullest extent permitted by law.', # see pdf doc - may want to tweak
             'mip-era': 'CMIP6’',
             'nominal_resolution': '100 km',
             'physics_index': 1,
             'product': 'model-output',
             'realization_index': member,  # (for first set - this will change if we do additional ensemble members)
             'realm': 'atmos', # ‘atmos’, ‘land’
-            'source': 'UKESM1-StratTrop2:\natmos: UKESM1 (N96L85; model top 85km) \natmosChem: StratTrop chemistry with improvements \nland: JULES \nocean: NEMO (ORCA1) \nseaIce CICE',
-            'source_id': 'UKESM1-StratTrop2', # as registered
-            'source_type': 'AER AGCM CHEM',
+            'source': str(CV['CV']['source_id'][model_name]['source']),
+            'source_id': str(CV['CV']['source_id'][model_name]['source_id']),
+            'source_type': source_type,
             'sub_experiment': 'none',
             'sub_experiment_id': 'none',
             'table_id': table, # see other options
@@ -86,8 +86,8 @@ class global_attrs():
         dirname = [
             self.attrs['activity_id'],              # CCMI2022
             self.attrs['product'],                  # model-output
-            self.attrs['institute_id'],             # U-CAMBRIDGE
-            self.attrs['source_id'],                # UKESM1-StratTrop2
+            self.attrs['institute_id'],             # NCAS-CAMBRIDGE
+            self.attrs['source_id'],                # UKESM1-StratTrop
             self.attrs['experiment_id'],            # refD1
             self.attrs['frequency'],                # mon
             self.attrs['realm'],                    # atmos

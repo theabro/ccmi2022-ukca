@@ -1,9 +1,9 @@
 {
     "EM": {
-	"ens_member": 1,
+	"ens_member": 2,
         "suiteid": [
-            "u-cb159",
-	    "u-cd315"
+            "u-cc951",
+	    "u-cd796"
         ],
 	"ppdir": "/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022",
 	"ppstream": "apn.pp",
