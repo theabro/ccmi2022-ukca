@@ -38,10 +38,10 @@ class global_attrs():
             'grid_label': grid_label, # ‘gm’, ‘gn’, ‘gnz’, ‘gr’ (see CV.json for permitted options)
             'initialization_index': 1,
             'institute_id': str(CV['CV']['source_id'][model_name]['institution_id']),
-            'institution': 'National Centre for Atmospheric Science, Department of Chemistry, University of Cambridge, Lensfield Road, Cambridgre, CB2 1EW U.K.',
-            'license': 'CCMI2022 model data produced by '+str(CV['CV']['source_id']['UKESM1-StratTrop']['institution_id'])+' is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (https://creativecommons.org/licenses). Consult http://blogs.reading.ac.uk/ccmi/ for terms of use governing CCMI output, including citation requirements and proper acknowledgment. The data producers and data providers make no warranty, either express or implied, including, but not limited to, warranties of merchantability and fitness for a particular purpose. All liabilities arising from the supply of the information (including any liability arising in negligence) are excluded to the fullest extent permitted by law.', # see pdf doc - may want to tweak
+            'institution': str(CV['CV']['institution_id'][str(CV['CV']['source_id'][model_name]['institution_id'])]),
+            'license': 'CCMI2022 model data produced by '+str(CV['CV']['source_id'][model_name]['institution_id'])+' is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (https://creativecommons.org/licenses). Consult http://blogs.reading.ac.uk/ccmi/ for terms of use governing CCMI output, including citation requirements and proper acknowledgment. The data producers and data providers make no warranty, either express or implied, including, but not limited to, warranties of merchantability and fitness for a particular purpose. All liabilities arising from the supply of the information (including any liability arising in negligence) are excluded to the fullest extent permitted by law.', # see pdf doc - may want to tweak
             'mip-era': 'CMIP6’',
-            'nominal_resolution': '100 km',
+            'nominal_resolution': '100 km', # valid for UKESM1-StratTrop
             'physics_index': 1,
             'product': 'model-output',
             'realization_index': member,  # (for first set - this will change if we do additional ensemble members)
