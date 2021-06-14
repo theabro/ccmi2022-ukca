@@ -7,10 +7,8 @@ import global_attrs
 import numpy as np
 import argparse
 import datetime
+import glob
 
-# pp files to take
-ppfiles='*.pp'
-#ppfiles='*201[45]*.pp'
 
 # model name - used as a lookup
 model_name='UKESM1-StratTrop'
@@ -26,6 +24,7 @@ def get_opts():
     parser.add_argument('-r', '--ens_file', type=str, default='refD1_r1i1p1f2_apn.json', help='Name of UKESM1-StratTrop2 JSON ensemble member file (e.g. refD1_r1i1p1f2_apn.json)')
     parser.add_argument('-v', '--var_dir', type=str, default='/home/users/nlabraham/git/ccmi2022-ukca/vars', help='Name of UKESM1-StratTrop2 JSON variables directory')
     parser.add_argument('-f', '--var_file', type=str, default='toz.json', help='Name of UKESM1-StratTrop2 JSON variable file (e.g. toz.json)')
+    parser.add_argument('-d', '--decade', type=int, default=0, help='Decade to start taking data from (e.g. 1960). Use 0 to output all times.')
     return parser.parse_args()
 
 
@@ -156,10 +155,21 @@ def main(args):
     with open(json_dir+'/'+json_file) as json_file:
         CV=json.load(json_file)
     
+    # define start and number of ppfiles to take
+    decade=np.int(args.decade/10)
+    if decade > 0:
+        ppfiles='*'+str(decade)+'*.pp'
+    else:
+        ppfiles='*.pp'
+        
+
     # create list of files to read, might be in several directories
     plist=[]
     for i in suiteid:
-        plist.append(ppdir+'/'+i+'/'+ppstream+'/'+ppfiles)
+        test_path=ppdir+'/'+i+'/'+ppstream+'/'+ppfiles
+        # check that there are actually files in the path
+        if glob.glob(test_path):
+            plist.append(test_path)
         
     # read-in
     field=iris.load_cube(plist,iris.AttributeConstraint(STASH=STASHcode),callback=CCMI2022_callback)

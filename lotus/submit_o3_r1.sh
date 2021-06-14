@@ -3,6 +3,7 @@
 #SBATCH -o %j.out 
 #SBATCH -e %j.err
 #SBATCH --time=48:00:00
+#SBATCH --mem=24000
 
 # run python
 module load jaspy/3.7
