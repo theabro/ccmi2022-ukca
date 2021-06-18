@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "n2o",
+	"in_units": "kg kg-1",
+	"conversion_factor": 1.5188,
+	"STASHcode": "m01s34i049",
+	"grid_label": "gn"
+    }
+}

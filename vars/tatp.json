@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "tatp",
+	"in_units": "K",
+	"conversion_factor": 1,
+	"STASHcode": "m01s30i452",
+	"grid_label": "gn"
+    }
+}

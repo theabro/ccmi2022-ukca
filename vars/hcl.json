@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "hcl",
+	"in_units": "kg kg-1",
+	"conversion_factor": 1.2604,
+	"STASHcode": "m01s34i992",
+	"grid_label": "gn"
+    }
+}

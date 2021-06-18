@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "ps",
+	"in_units": "Pa",
+	"conversion_factor": 1,
+	"STASHcode": "m01s00i409",
+	"grid_label": "gn"
+    }
+}

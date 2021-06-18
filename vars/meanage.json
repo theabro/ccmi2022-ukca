@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "meanage",
+	"in_units": "s",
+	"conversion_factor": 31104000.0,
+	"STASHcode": "m01s34i150",
+	"grid_label": "gn"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "ztp",
+	"in_units": "m",
+	"conversion_factor": 1,
+	"STASHcode": "m01s30i453",
+	"grid_label": "gn"
+    }
+}
