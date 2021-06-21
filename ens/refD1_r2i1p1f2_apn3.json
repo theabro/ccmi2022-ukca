@@ -1,12 +1,12 @@
 {
     "EM": {
-	"ens_member": 3,
+	"ens_member": 2,
         "suiteid": [
-            "u-cc956",
-	    "u-cd797"
+            "u-cc951",
+	    "u-cd796"
         ],
 	"ppdir": "/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022",
-	"ppstream": "apn2.pp",
+	"ppstream": "apn3.pp",
 	"expt_id": "refD1",
 	"source_type": "AER AGCM CHEM"
     }

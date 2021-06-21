@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "o3strat",
+	"in_units": "kg kg-1",
+	"conversion_factor": 1.657,
+	"STASHcode": "m01s34i026",
+	"grid_label": "gn"
+    }
+}

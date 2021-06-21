@@ -1,0 +1,10 @@
+begin
+   stash=(10,24,30111,34001)
+   year=[1960..2018]
+end
+begin
+   stash=50219
+   blev>0.0 
+   blev<=20.0
+   year=[1960..2018]
+end
