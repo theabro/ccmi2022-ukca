@@ -9,3 +9,8 @@ When using the `DECADE` variable for submitting to lotus, use the following comm
 ```
 for i in `seq 1960 10 2010`; do echo $i; sbatch --export=ALL,DECADE=$i ~/git/ccmi2022-ukca/lotus/submit_o3_r2.sh ; done
 ```
+
+To extract the variables from the MASS dataset, use the following `moo select` command, e.g.
+```
+nohup moo select -v -I /home/users/nlabraham/git/ccmi2022-ukca/stash/ccmi2022_v4.stash moose:/crum/u-cd797/apn.pp ./apn4.pp &> v4_1.sel &
+```
