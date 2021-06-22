@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "tntrs",
+	"in_units": "K",
+	"conversion_factor": 1200.0,
+	"STASHcode": "m01s01i161",
+	"grid_label": "gn"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "rsut",
+	"in_units": "W m-2",
+	"conversion_factor": 1,
+	"STASHcode": "m01s01i208",
+	"grid_label": "gn"
+    }
+}

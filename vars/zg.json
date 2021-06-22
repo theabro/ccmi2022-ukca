@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "zg",
+	"in_units": "m",
+	"conversion_factor": 1,
+	"STASHcode": "m01s16i201",
+	"grid_label": "gn"
+    }
+}

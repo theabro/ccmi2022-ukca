@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "pr",
+	"in_units": "kg m-2 s-1",
+	"conversion_factor": 1,
+	"STASHcode": "m01s05i216",
+	"grid_label": "gn"
+    }
+}

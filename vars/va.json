@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "va",
+	"in_units": "m s-1",
+	"conversion_factor": 1,
+	"STASHcode": "m01s00i003",
+	"grid_label": "gn"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "hfls",
+	"in_units": "W m-2",
+	"conversion_factor": 1,
+	"STASHcode": "m01s03i234",
+	"grid_label": "gn"
+    }
+}

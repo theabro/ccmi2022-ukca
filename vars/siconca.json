@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "siconca",
+	"in_units": "1",
+	"conversion_factor": 0.01,
+	"STASHcode": "m01s00i031",
+	"grid_label": "gn"
+    }
+}

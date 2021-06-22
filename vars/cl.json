@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "cl",
+	"in_units": "1",
+	"conversion_factor": 0.01,
+	"STASHcode": "m01s02i261",
+	"grid_label": "gn"
+    }
+}
