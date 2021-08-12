@@ -8,11 +8,11 @@ import numpy as np
 import argparse
 import datetime
 import glob
+import cf_units
 
 
 # model name - used as a lookup
 model_name='UKESM1-StratTrop'
-
 
 # read-in command-line arguments, if required
 def get_opts():
@@ -49,15 +49,13 @@ def CCMI2022_callback(cube, field, filename):
     cube.attributes['type']=str(entries['variable_entry'][var]['type'])
     cube.attributes['positive']=str(entries['variable_entry'][var]['positive'])
     # valid_min/max need to be set to None if they don't have a value
+    #  - for some reason these are of the format 'X.y r' etc., so split and just take the number part
     if entries['variable_entry'][var]['valid_min'] is not '':
-        cube.valid_min = entries['variable_entry'][var]['valid_min']
-    else:
-        cube.valid_min = None
+        cube.attributes['valid_min'] = np.float64(entries['variable_entry'][var]['valid_min'].split()[0])
+        cube.attributes['missing_value'] = np.float64(entries['Header']['missing_value'])
     if entries['variable_entry'][var]['valid_max'] is not '':
-        cube.valid_max = entries['variable_entry'][var]['valid_max']
-    else:
-        cube.valid_max = None
-
+        cube.attributes['valid_max'] = np.float64(entries['variable_entry'][var]['valid_max'].split()[0])
+        cube.attributes['missing_value'] = np.float64(entries['Header']['missing_value'])
 
 # function to save to NetCDF
 def save_field(cube, ga, odir, start_time, end_time):
@@ -83,7 +81,17 @@ def save_field(cube, ga, odir, start_time, end_time):
     # actually save the field, including local attributes as required
     # not sure if `deflate=1` is equivalent to `complevel=1`. This is the 
     # lowest compression level (default is 4, 9 is highest)
-    saver.write(cube, zlib=True, shuffle=True, complevel=1, unlimited_dimensions=['time'], local_keys=['comment', 'dimensions', 'cell_measures', 'frequency', 'modeling_realm', 'type', 'positive', 'valid_min', 'valid_max'])
+    # set local keys - need to add-in valid ranges & missing data if these are required
+    local_keys=['comment', 'dimensions', 'cell_measures', 'frequency', 'modeling_realm', 'type', 'positive']
+    try:
+        if (cube.attributes['missing_value'] is not None):
+            local_keys.append('valid_min')
+            local_keys.append('valid_max')
+            local_keys.append('missing_value')
+    except KeyError:
+        pass
+    # now save
+    saver.write(cube, zlib=True, shuffle=True, complevel=1, unlimited_dimensions=['time'], local_keys=local_keys)
 
     print('File saved to %s' % ofile)
 
@@ -95,8 +103,22 @@ def convert_units(cube):
         return cube
 
     cube.data=( cube.data / np.float64(cube.attributes['conversion_factor']) )
+
+    # convert time units - must be a "days since..." format
+    new_time_unit = cf_units.Unit('days since 1960-01-01', calendar=cube.coord('time').units.calendar)
+    cube.coord('time').convert_units(new_time_unit)
+
     return cube
     
+def mask_outside_valid_range(cube):
+    # If we have a valid range, mask things outside it.
+    try:
+        cube.data=np.ma.masked_outside(cube.data, cube.attributes['valid_min'], cube.attributes['valid_max'])
+        np.ma.set_fill_value(cube.data, cube.attributes['missing_value'])
+    except KeyError:
+        pass
+
+    return cube
 
 def main(args):
     # global variables (used in Callback)
@@ -182,6 +204,8 @@ def main(args):
     ga=global_attrs.global_attrs(suiteid, str(field.var_name), iris_version, CV, member=ens_member, table=stream, expt_id=expt_id, grid_label=grid_label, source_type=source_type, model_name=model_name)
     # convert units of data if required
     field=convert_units(field)
+    # set a valid min/max & mask outside this if required
+    field=mask_outside_valid_range(field)
     
     # save variable to NetCDF in correct directory
     save_field(field, ga, odir, start_time, end_time)

@@ -37,10 +37,10 @@ class global_attrs():
             'grid': 'N96L85 hybrid-theta (1.25 latitude by 1.875 longitude with 85 vertical levels up to 85km)',
             'grid_label': grid_label, # ‘gm’, ‘gn’, ‘gnz’, ‘gr’ (see CV.json for permitted options)
             'initialization_index': 1,
-            'institute_id': str(CV['CV']['source_id'][model_name]['institution_id']),
+            'institution_id': str(CV['CV']['source_id'][model_name]['institution_id']),
             'institution': str(CV['CV']['institution_id'][str(CV['CV']['source_id'][model_name]['institution_id'])]),
             'license': 'CCMI2022 model data produced by '+str(CV['CV']['source_id'][model_name]['institution_id'])+' is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (https://creativecommons.org/licenses). Consult http://blogs.reading.ac.uk/ccmi/ for terms of use governing CCMI output, including citation requirements and proper acknowledgment. The data producers and data providers make no warranty, either express or implied, including, but not limited to, warranties of merchantability and fitness for a particular purpose. All liabilities arising from the supply of the information (including any liability arising in negligence) are excluded to the fullest extent permitted by law.', # see pdf doc - may want to tweak
-            'mip-era': 'CMIP6’',
+            'mip-era': 'CMIP6',
             'nominal_resolution': '100 km', # valid for UKESM1-StratTrop
             'physics_index': 1,
             'product': 'model-output',
@@ -86,7 +86,7 @@ class global_attrs():
         dirname = [
             self.attrs['activity_id'],              # CCMI2022
             self.attrs['product'],                  # model-output
-            self.attrs['institute_id'],             # NCAS-CAMBRIDGE
+            self.attrs['institution_id'],           # NCAS-CAMBRIDGE
             self.attrs['source_id'],                # UKESM1-StratTrop
             self.attrs['experiment_id'],            # refD1
             self.attrs['frequency'],                # mon
