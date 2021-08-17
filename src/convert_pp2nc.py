@@ -73,6 +73,9 @@ def save_field(cube, ga, odir, start_time, end_time):
     if os.path.exists(ofile):
         os.remove(ofile)
 
+    # set default fill value (i.e. no value as not masked) - may be altered below
+    cube_fill_value=None
+
     # set-up saver
     saver = iris.fileformats.netcdf.Saver(filename=ofile, netcdf_format='NETCDF4_CLASSIC')
     # add global attributes as required
@@ -88,10 +91,13 @@ def save_field(cube, ga, odir, start_time, end_time):
             local_keys.append('valid_min')
             local_keys.append('valid_max')
             local_keys.append('missing_value')
+            # set fill value as necessary - will appear as _FillValue in NetCDF file
+            cube_fill_value = cube.attributes['missing_value']
     except KeyError:
         pass
+
     # now save
-    saver.write(cube, zlib=True, shuffle=True, complevel=1, unlimited_dimensions=['time'], local_keys=local_keys)
+    saver.write(cube, zlib=True, shuffle=True, complevel=1, unlimited_dimensions=['time'], local_keys=local_keys, fill_value=cube_fill_value)
 
     print('File saved to %s' % ofile)
 

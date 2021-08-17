@@ -14,3 +14,8 @@ To extract the variables from the MASS dataset, use the following `moo select` c
 ```
 nohup moo select -v -I /home/users/nlabraham/git/ccmi2022-ukca/stash/ccmi2022_v4.stash moose:/crum/u-cd797/apn.pp ./apn4.pp &> v4_1.sel &
 ```
+
+If all files are in the same directory, the following command will list them by variable name, giving the total number of each and allow file-sizes to be compared (useful when checking for missing files)
+```
+for i in `ls *.nc | awk -F\_ '{print $1}' | sort -u`; do echo $i `ls ${i}_*.nc | wc`; ls -l ${i}_*.nc ; done | less
+```
