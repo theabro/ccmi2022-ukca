@@ -212,6 +212,10 @@ def main(args):
     field=convert_units(field)
     # set a valid min/max & mask outside this if required
     field=mask_outside_valid_range(field)
+
+    # edit cell methods to include area, restrict to Amon for the moment
+    if (stream == 'Amon'):
+        field.cell_methods=(iris.coords.CellMethod(method='mean', coords=['area','time']),)
     
     # save variable to NetCDF in correct directory
     save_field(field, ga, odir, start_time, end_time)

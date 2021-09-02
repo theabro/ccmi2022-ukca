@@ -29,7 +29,7 @@ class global_attrs():
             'contact': 'N. Luke Abraham <n.luke.abraham@ncas.ac.uk>, James Keeble <james.keeble@ncas.ac.uk>',
             'creation_date': '',  # a string representation of the date when the netCDF file was created in the format: 'YYYY-MM-DD-THH:MM:SSZ'. The 'T' and 'Z' are not modified, but the other variables are replaced with the correct time stamp. If using CMOR, this is generated automatically.'
             'data_specs_version': '01.00.00', # ‘01.00.00’ or similar (see variable tables for exact number)
-            'data_version': '20210317', # may be changed, e.g. for corrections
+            'data_version': '20210902', # may be changed, e.g. for corrections
             'experiment': 'Hindcast', # ‘Hindcast’, ‘Baseline projection using…’ (see CV.json for permitted options)
             'experiment_id': expt_id, # ‘refD1’, ‘refD2’, ‘senD2-geo’, ‘senD2-ssp126’, ‘senD2-ssp370’
             'forcing_index': 2,
@@ -40,7 +40,7 @@ class global_attrs():
             'institution_id': str(CV['CV']['source_id'][model_name]['institution_id']),
             'institution': str(CV['CV']['institution_id'][str(CV['CV']['source_id'][model_name]['institution_id'])]),
             'license': 'CCMI2022 model data produced by '+str(CV['CV']['source_id'][model_name]['institution_id'])+' is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (https://creativecommons.org/licenses). Consult http://blogs.reading.ac.uk/ccmi/ for terms of use governing CCMI output, including citation requirements and proper acknowledgment. The data producers and data providers make no warranty, either express or implied, including, but not limited to, warranties of merchantability and fitness for a particular purpose. All liabilities arising from the supply of the information (including any liability arising in negligence) are excluded to the fullest extent permitted by law.', # see pdf doc - may want to tweak
-            'mip-era': 'CMIP6',
+            'mip_era': 'CMIP6',
             'nominal_resolution': '100 km', # valid for UKESM1-StratTrop
             'physics_index': 1,
             'product': 'model-output',
@@ -93,14 +93,14 @@ class global_attrs():
             self.attrs['realm'],                    # atmos
             self.freq_map[self.attrs['frequency']], # monthly
             self.attrs['variant_label'],            # r1i1p1f2 
-            'v' + str(self.attrs['data_version']),  # v20210317
+            'v' + str(self.attrs['data_version']),  # v20210902
             self.attrs['variable_id']               # toz
         ]
     
         return os.path.join('',*dirname)
 
     def gen_filename(self,start_time,end_time):
-        #filename = <variable_id>_<table_id>_<source_id>_<experiment_id>_<variant_label>_<grid_label>[_<time_range>].nc
+        #filename = <variable_id>_<table_id>_<source_id>_<experiment_id>_<variant_label>_<grid_label>[_<time_range_start>-<time_range_end>].nc
 
         filename = [
             self.attrs['variable_id'], 
@@ -109,8 +109,7 @@ class global_attrs():
             self.attrs['experiment_id'],  
             self.attrs['variant_label'], 
             self.attrs['grid_label'], 
-            start_time,
-            end_time
+            start_time+'-'+end_time
         ]
 
         return '_'.join(filename) + '.nc'
