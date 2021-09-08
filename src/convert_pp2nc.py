@@ -103,16 +103,18 @@ def save_field(cube, ga, odir, start_time, end_time):
 
 
 def convert_units(cube):
+    # do this first as needs to be done for all fields
+    # convert time units - must be a "days since..." format
+    new_time_unit = cf_units.Unit('days since 1960-01-01', calendar=cube.coord('time').units.calendar)
+    cube.coord('time').convert_units(new_time_unit)
+
+    # check whether field units actually need to be converted
     if ((cube.attributes['in_units'] == str(cube.units)) or 
         (cube.attributes['conversion_factor'] == 1)):
         # do nothing, input units are the same as required
         return cube
 
     cube.data=( cube.data / np.float64(cube.attributes['conversion_factor']) )
-
-    # convert time units - must be a "days since..." format
-    new_time_unit = cf_units.Unit('days since 1960-01-01', calendar=cube.coord('time').units.calendar)
-    cube.coord('time').convert_units(new_time_unit)
 
     return cube
     
