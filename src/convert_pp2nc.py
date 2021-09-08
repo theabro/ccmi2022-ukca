@@ -107,6 +107,12 @@ def convert_units(cube):
     # convert time units - must be a "days since..." format
     new_time_unit = cf_units.Unit('days since 1960-01-01', calendar=cube.coord('time').units.calendar)
     cube.coord('time').convert_units(new_time_unit)
+    # also do for forecast reference time
+    new_time_unit = cf_units.Unit('days since 1960-01-01', calendar=cube.coord('forecast_reference_time').units.calendar)
+    cube.coord('forecast_reference_time').convert_units(new_time_unit)
+    # also do for forecast period
+    new_time_unit = cf_units.Unit('days')
+    cube.coord('forecast_period').convert_units(new_time_unit)
 
     # check whether field units actually need to be converted
     if ((cube.attributes['in_units'] == str(cube.units)) or 

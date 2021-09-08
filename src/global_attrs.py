@@ -29,7 +29,7 @@ class global_attrs():
             'contact': 'N. Luke Abraham <n.luke.abraham@ncas.ac.uk>, James Keeble <james.keeble@ncas.ac.uk>',
             'creation_date': '',  # a string representation of the date when the netCDF file was created in the format: 'YYYY-MM-DD-THH:MM:SSZ'. The 'T' and 'Z' are not modified, but the other variables are replaced with the correct time stamp. If using CMOR, this is generated automatically.'
             'data_specs_version': '01.00.00', # ‘01.00.00’ or similar (see variable tables for exact number)
-            'data_version': '20210902', # may be changed, e.g. for corrections
+            'data_version': '20210908', # may be changed, e.g. for corrections
             'experiment': 'Hindcast', # ‘Hindcast’, ‘Baseline projection using…’ (see CV.json for permitted options)
             'experiment_id': expt_id, # ‘refD1’, ‘refD2’, ‘senD2-geo’, ‘senD2-ssp126’, ‘senD2-ssp370’
             'forcing_index': 2,
@@ -93,7 +93,7 @@ class global_attrs():
             self.attrs['realm'],                    # atmos
             self.freq_map[self.attrs['frequency']], # monthly
             self.attrs['variant_label'],            # r1i1p1f2 
-            'v' + str(self.attrs['data_version']),  # v20210902
+            'v' + str(self.attrs['data_version']),  # e.g. v20210908
             self.attrs['variable_id']               # toz
         ]
     
