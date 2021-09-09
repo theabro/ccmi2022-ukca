@@ -6,4 +6,4 @@
 
 # run python
 module load jaspy/3.7
-python /home/users/nlabraham/git/ccmi2022-ukca/src/convert_pp2nc.py -f zg.json -r refD1_r1i1p1f2_apn4.json -d ${DECADE}
+python /home/users/nlabraham/git/ccmi2022-ukca/src/convert_pp2nc.py -f clc.json -r refD1_r2i1p1f2_apn4.json -d ${DECADE}

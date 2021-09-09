@@ -2,7 +2,7 @@
 #SBATCH --partition=short-serial
 #SBATCH -o %j.out 
 #SBATCH -e %j.err
-#SBATCH --time=3:00:00
+#SBATCH --time=24:00:00
 
 # run python
 module load jaspy/3.7
