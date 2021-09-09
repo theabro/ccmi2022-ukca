@@ -36,7 +36,11 @@ def CCMI2022_callback(cube, field, filename):
     # The following should apply to all cubes read-in, take values from json
     cube.rename(name=str(entries['variable_entry'][var]['out_name']))
     cube.units=str(entries['variable_entry'][var]['units'])
-    cube.standard_name=str(entries['variable_entry'][var]['standard_name'])
+    # set standard name, but cope if this won't work so just set long name
+    try:
+        cube.standard_name=str(entries['variable_entry'][var]['standard_name'])
+    except:
+        pass
     cube.long_name=str(entries['variable_entry'][var]['long_name'])
     cube.var_name=str(entries['variable_entry'][var]['out_name'])
     #cube.cell_methods=entries['variable_entry'][var]['cell_methods']
@@ -121,6 +125,22 @@ def convert_units(cube):
         return cube
 
     cube.data=( cube.data / np.float64(cube.attributes['conversion_factor']) )
+
+    # check if we need to divide by surface area. Check if in units are already m-2
+    if (('m-2' in str(cube.units)) and ('m-2' not in cube.attributes['in_units'])):
+        print('DIVIDING BY SURFACE AREA')
+        # calculate surface area - need to have bounds
+        try:
+            cube.coord(axis='X').guess_bounds()
+        except:
+            pass
+        try:
+            cube.coord(axis='Y').guess_bounds()
+        except:
+            pass
+        surf_area=iris.analysis.cartography.area_weights(cube, normalize=False)
+        # divide by surface area
+        cube.data=( cube.data / surf_area )
 
     return cube
     

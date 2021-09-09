@@ -1,0 +1,9 @@
+{
+    "VARS": {
+        "var": "o3stratdep",
+	"in_units": "mol s-1",
+	"conversion_factor": 20.833333333333332,
+	"STASHcode": "m01s50i068",
+	"grid_label": "gn"
+    }
+}
