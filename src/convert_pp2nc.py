@@ -128,7 +128,6 @@ def convert_units(cube):
 
     # check if we need to divide by surface area. Check if in units are already m-2
     if (('m-2' in str(cube.units)) and ('m-2' not in cube.attributes['in_units'])):
-        print('DIVIDING BY SURFACE AREA')
         # calculate surface area - need to have bounds
         try:
             cube.coord(axis='X').guess_bounds()
