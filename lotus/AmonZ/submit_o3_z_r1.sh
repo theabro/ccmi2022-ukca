@@ -6,4 +6,4 @@
 
 # run python
 module load jaspy/3.7
-python /home/users/nlabraham/git/ccmi2022-ukca/src/convert_pp2nc.py -f o3_z.json -r refD1_r1i1p1f2_apo.json
+python /home/users/nlabraham/git/ccmi2022-ukca/src/convert_pp2nc.py -f o3_z.json -r refD1_r1i1p1f2_apo.json -s AmonZ
