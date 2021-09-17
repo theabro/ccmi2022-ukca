@@ -43,11 +43,12 @@ def CCMI2022_callback(cube, field, filename):
         pass
     cube.long_name=str(entries['variable_entry'][var]['long_name'])
     cube.var_name=str(entries['variable_entry'][var]['out_name'])
+    # deal with cell_methods below
     #cube.cell_methods=entries['variable_entry'][var]['cell_methods']
     # these set as attributes
+    cube.attributes['cell_measures']=str(entries['variable_entry'][var]['cell_measures'])
     cube.attributes['frequency']=str(entries['variable_entry'][var]['frequency'])
     cube.attributes['modeling_realm']=str(entries['variable_entry'][var]['modeling_realm'])
-#    #cube.attributes['cell_measures']=str(entries['variable_entry'][var]['cell_measures'])
     cube.attributes['comment']=str(entries['variable_entry'][var]['comment'])
     cube.attributes['dimensions']=str(entries['variable_entry'][var]['dimensions'])
     cube.attributes['type']=str(entries['variable_entry'][var]['type'])
@@ -92,11 +93,27 @@ def save_field(cube, ga, odir, start_time, end_time):
     local_keys=['comment', 'dimensions', 'cell_measures', 'frequency', 'modeling_realm', 'type', 'positive']
     try:
         if (cube.attributes['missing_value'] is not None):
-            local_keys.append('valid_min')
-            local_keys.append('valid_max')
             local_keys.append('missing_value')
-            # set fill value as necessary - will appear as _FillValue in NetCDF file
+            # set fill value as necessary
+            #  - will appear as _FillValue in NetCDF file
             cube_fill_value = cube.attributes['missing_value']
+    except KeyError:
+        pass
+    # may NOT have valid_min/max values set
+    try:
+        if (cube.attributes['valid_min'] is not None):
+            local_keys.append('valid_min')
+    except KeyError:
+        pass
+    try:
+        if (cube.attributes['valid_max'] is not None):
+            local_keys.append('valid_max')
+    except KeyError:
+        pass
+    # add information about heaviside function used
+    try:
+        if (cube.attributes['heaviside'] is not None):
+            local_keys.append('heaviside')
     except KeyError:
         pass
 
@@ -186,6 +203,11 @@ def main(args):
     conversion_factor=np.float(variable['VARS']['conversion_factor'])
     STASHcode=str(variable['VARS']['STASHcode'])
     grid_label=str(variable['VARS']['grid_label'])
+    heaviside=None
+    try:
+        heaviside=str(variable['VARS']['heaviside'])
+    except:
+        pass
     
     
     # read-in ensemble member information from JSON file
@@ -204,6 +226,10 @@ def main(args):
     json_file='CCMI2022_'+stream+'.json'
     with open(json_dir+'/'+json_file) as json_file:
         entries=json.load(json_file)
+    
+    # need this for later
+    cell_methods=str(entries['variable_entry'][var]['cell_methods'])
+
 
     # read-in JSON CV information
     json_file='CCMI2022_CV.json'
@@ -228,6 +254,30 @@ def main(args):
         
     # read-in
     field=iris.load_cube(plist,iris.AttributeConstraint(STASH=STASHcode),callback=CCMI2022_callback)
+
+    mask_data=False
+    try:
+        if (cube.attributes['missing_value'] is not None):
+            mask_data=True
+    except:
+        pass        
+
+    # have provided a Heaviside function, i.e. field contains masked data.
+    if (heaviside is not None):
+        heaviside=iris.load_cube(plist,iris.AttributeConstraint(STASH=heaviside))
+        # divide by Heaviside function - will create masked_array
+        field.data=np.ma.masked_invalid(field.data/heaviside.data)
+        # now need to set missing data attributes
+        field.attributes['missing_value'] = np.float64(entries['Header']['missing_value'])
+        # already masked so don't do again
+        mask_data=False
+
+    # set positive direction for pressure levels
+    try:
+        field.coord('pressure').attributes['positive']='down'
+    except:
+        pass
+
     # determine start and end time of data in easy to read format
     start_time=str(field.coord('time').units.num2date(field.coord('time').bounds[0,0])).split(' ')[0].replace('-','')
     end_time=str(field.coord('time').units.num2date(field.coord('time').bounds[-1,-1])).split(' ')[0].replace('-','')
@@ -237,13 +287,22 @@ def main(args):
     ga=global_attrs.global_attrs(suiteid, str(field.var_name), iris_version, CV, member=ens_member, table=stream, expt_id=expt_id, grid_label=grid_label, source_type=source_type, model_name=model_name)
     # convert units of data if required
     field=convert_units(field)
-    # set a valid min/max & mask outside this if required
-    field=mask_outside_valid_range(field)
 
-    # edit cell methods to include area, restrict to Amon for the moment
+    # set a valid min/max & mask outside this if required
+    if (mask_data):
+        field=mask_outside_valid_range(field)
+
+    # deal with cell_methods - needs to be a tuple
     if (stream == 'Amon'):
         field.cell_methods=(iris.coords.CellMethod(method='mean', coords=['area','time']),)
-    
+    else:
+        cm_t=()
+        for s in cell_methods.split():
+            if (':' in s):
+                dcoord=s.rsplit(':',1)[0]
+                cm_t=cm_t+(iris.coords.CellMethod(method='mean', coords=dcoord),)
+        field.cell_methods=cm_t
+
     # save variable to NetCDF in correct directory
     save_field(field, ga, odir, start_time, end_time)
     

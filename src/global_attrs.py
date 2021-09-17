@@ -22,6 +22,8 @@ import os.path
 from datetime import datetime
 import uuid
 
+data_version='20210917'
+
 class global_attrs():
     def __init__(self, suiteid, variable_name, iris_version, CV, member=1, table='Amon', expt_id='refD1', grid_label='gn', source_type='AER AGCM CHEM', model_name='UKESM1-StratTrop'):
         self.attrs = {
@@ -29,7 +31,7 @@ class global_attrs():
             'contact': 'N. Luke Abraham <n.luke.abraham@ncas.ac.uk>, James Keeble <james.keeble@ncas.ac.uk>',
             'creation_date': '',  # a string representation of the date when the netCDF file was created in the format: 'YYYY-MM-DD-THH:MM:SSZ'. The 'T' and 'Z' are not modified, but the other variables are replaced with the correct time stamp. If using CMOR, this is generated automatically.'
             'data_specs_version': '01.00.00', # ‘01.00.00’ or similar (see variable tables for exact number)
-            'data_version': '20210910', # may be changed, e.g. for corrections - could use datetime.now().strftime("%Y%m%d")
+            'data_version': data_version, # may be changed, e.g. for corrections - could use datetime.now().strftime("%Y%m%d")
             'experiment': 'Hindcast', # ‘Hindcast’, ‘Baseline projection using…’ (see CV.json for permitted options)
             'experiment_id': expt_id, # ‘refD1’, ‘refD2’, ‘senD2-geo’, ‘senD2-ssp126’, ‘senD2-ssp370’
             'forcing_index': 2,
