@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "epfz",
+	"in_units": "m3 s-2",
+	"conversion_factor": 1,
+	"STASHcode": "m01s30i313",
+	"grid_label": "grz",
+	"heaviside": "m01s30i301"
+    }
+}

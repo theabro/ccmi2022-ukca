@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "h2o2",
+	"in_units": "kg kg-1",
+	"conversion_factor": 1.174,
+	"STASHcode": "m01s51i008",
+	"grid_label": "grz",
+	"heaviside": "m01s51i999"
+    }
+}

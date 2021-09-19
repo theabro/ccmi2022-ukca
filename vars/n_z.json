@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "n",
+	"in_units": "kg kg-1",
+	"conversion_factor": 0.48325,
+	"STASHcode": "m01s51i058",
+	"grid_label": "grz",
+	"heaviside": "m01s51i999"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "brono2",
+	"in_units": "kg kg-1",
+	"conversion_factor": 4.9034,
+	"STASHcode": "m01s51i048",
+	"grid_label": "grz",
+	"heaviside": "m01s51i999"
+    }
+}

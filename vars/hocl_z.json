@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "hocl",
+	"in_units": "kg kg-1",
+	"conversion_factor": 1.8129,
+	"STASHcode": "m01s51i051",
+	"grid_label": "grz",
+	"heaviside": "m01s51i999"
+    }
+}

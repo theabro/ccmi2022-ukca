@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "brcl",
+	"in_units": "kg kg-1",
+	"conversion_factor": 3.9884,
+	"STASHcode": "m01s51i047",
+	"grid_label": "grz",
+	"heaviside": "m01s51i999"
+    }
+}

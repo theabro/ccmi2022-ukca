@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "wtem",
+	"in_units": "m s-1",
+	"conversion_factor": 1,
+	"STASHcode": "m01s30i311",
+	"grid_label": "grz",
+	"heaviside": "m01s30i301"
+    }
+}

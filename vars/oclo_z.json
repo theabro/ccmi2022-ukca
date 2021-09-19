@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "oclo",
+	"in_units": "kg kg-1",
+	"conversion_factor": 2.3309,
+	"STASHcode": "m01s51i044",
+	"grid_label": "grz",
+	"heaviside": "m01s51i999"
+    }
+}

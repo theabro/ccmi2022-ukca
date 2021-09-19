@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "hno4",
+	"in_units": "kg kg-1",
+	"conversion_factor": 2.727,
+	"STASHcode": "m01s51i006",
+	"grid_label": "grz",
+	"heaviside": "m01s51i999"
+    }
+}

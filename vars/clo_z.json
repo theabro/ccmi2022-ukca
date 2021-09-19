@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "clo",
+	"in_units": "kg kg-1",
+	"conversion_factor": 1.7784,
+	"STASHcode": "m01s51i042",
+	"grid_label": "grz",
+	"heaviside": "m01s51i999"
+    }
+}

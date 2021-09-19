@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "so2",
+	"in_units": "kg kg-1",
+	"conversion_factor": 2.2112,
+	"STASHcode": "m01s51i072",
+	"grid_label": "grz",
+	"heaviside": "m01s51i999"
+    }
+}

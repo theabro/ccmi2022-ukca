@@ -1,0 +1,10 @@
+{
+    "VARS": {
+        "var": "sadsulf",
+	"in_units": "cm-2 cm-3",
+	"conversion_factor": 0.01,
+	"STASHcode": "m01s52i256",
+	"grid_label": "grz",
+	"heaviside": "m01s51i999"
+    }
+}
