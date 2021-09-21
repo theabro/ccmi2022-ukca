@@ -136,12 +136,9 @@ def convert_units(cube):
     cube.coord('forecast_period').convert_units(new_time_unit)
 
     # check whether field units actually need to be converted
-    if ((cube.attributes['in_units'] == str(cube.units)) or 
-        (cube.attributes['conversion_factor'] == 1)):
-        # do nothing, input units are the same as required
-        return cube
-
-    cube.data=( cube.data / np.float64(cube.attributes['conversion_factor']) )
+    if ((cube.attributes['conversion_factor'] != 1)):
+        # divide by conversion factor
+        cube.data=( cube.data / np.float64(cube.attributes['conversion_factor']) )
 
     # check if we need to divide by surface area. Check if in units are already m-2
     if (('m-2' in str(cube.units)) and ('m-2' not in cube.attributes['in_units'])):
@@ -157,6 +154,16 @@ def convert_units(cube):
         surf_area=iris.analysis.cartography.area_weights(cube, normalize=False)
         # divide by surface area
         cube.data=( cube.data / surf_area )
+
+    # convert units for epfy & epfz
+    if ((str(cube.var_name) == 'epfy') or (str(cube.var_name) == 'epfz')):
+        if ((str(cube.units) == 'm3 s-2') and (cube.attributes['in_units'] == 'kg s-2')):
+            rho0 = 1.212    # kg m-3
+            p0 = 1000.0     # hPa
+            press = cube.coord('pressure')
+            density = rho0 * press / p0
+            divcube = cube / density
+            cube.data = divcube.data
 
     return cube
     
