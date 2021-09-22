@@ -3,7 +3,7 @@ UKCA scripts for data conversion for CCMI2022
 
 For use on JASMIN platform with the module `jaspy/3.7/r20200606`.
 
-The NetCDF files created are viewable by `Xconv` or `ncview`.
+The NetCDF files created are viewable by `Xconv` or `ncview`. If the files have been created in an iPython environment they may not work with Xconv - the reasons for this are currently unknown.
 
 When using the `DECADE` variable for submitting to lotus, use the following command, e.g.
 ```

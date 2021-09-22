@@ -16,7 +16,7 @@ global var
 
 ens_member='3'
 
-var='cly'
+var='bry'
 
 stream='AmonZ'
 
