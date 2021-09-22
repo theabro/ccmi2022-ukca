@@ -68,12 +68,16 @@ class global_attrs():
             'fx': 'fixed',
             'subhr': 'hourly'
         }
-
+        
         # need to pass a list to set_attrs
         if isinstance(suiteid,str):
             self.set_attrs([suiteid], iris_version)
         elif isinstance(suiteid,list):
             self.set_attrs(suiteid, iris_version)
+        else:
+            print("unexpected format for suiteid")
+            print(suiteid)
+            raise 
             
 
     def set_attrs(self, suiteid, iris_version):
