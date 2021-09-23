@@ -1,0 +1,4 @@
+begin
+   stash=(10,408)
+   year=[1960..2018]
+end

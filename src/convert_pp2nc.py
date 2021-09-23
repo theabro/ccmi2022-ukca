@@ -61,6 +61,15 @@ def CCMI2022_callback(cube, field, filename):
     if entries['variable_entry'][var]['valid_max'] is not '':
         cube.attributes['valid_max'] = np.float64(entries['variable_entry'][var]['valid_max'].split()[0])
         cube.attributes['missing_value'] = np.float64(entries['Header']['missing_value'])
+    try:
+        cube.attributes['heaviside']=str(variable['VARS']['heaviside'])
+    except:
+        pass
+    try:
+        cube.attributes['pressure_field']=str(variable['VARS']['pressure'])
+    except:
+        pass
+    
 
 # function to save to NetCDF
 def save_field(cube, ga, odir, start_time, end_time):
@@ -114,6 +123,12 @@ def save_field(cube, ga, odir, start_time, end_time):
     try:
         if (cube.attributes['heaviside'] is not None):
             local_keys.append('heaviside')
+    except KeyError:
+        pass
+    # add information about heaviside function used
+    try:
+        if (cube.attributes['pressure_field'] is not None):
+            local_keys.append('pressure_field')
     except KeyError:
         pass
 
@@ -188,6 +203,18 @@ def create_indir(ppdir, suiteid, ppstream, ppfiles):
             
     return plist
 
+def convert_to_pressure(cube,pcube,plevs,punit):
+
+    # make a new cube with 39 levels
+    newcube=cube.extract(iris.Constraint(model_level_number=lambda cell: 0 < cell < 40))
+
+    # define pressure coordinate
+    pressure=iris.coords.DimCoord(plevels,standard_name=None,long_name="pressure",var_name="pressure",units=cf_units.Unit(punit),attributes={"positive":"down"})
+
+    print(newcube)
+
+    return cube
+
 
 def main(args):
     # global variables (used in Callback)
@@ -227,7 +254,30 @@ def main(args):
         heaviside=str(variable['VARS']['heaviside'])
     except:
         pass
-    
+    plevels=None
+    try:
+        plevels=np.array(variable['VARS']['plevels'],dtype=np.float64)
+    except:
+        pass
+    pressure=None
+    try:
+        pressure=str(variable['VARS']['pressure'])
+    except:
+        pass
+    p_units=None
+    try:
+        p_units=str(variable['VARS']['p_units'])
+    except:
+        pass
+    if (plevels is not None):
+        if (pressure is None):
+            print("Require a pressure field for regridding")
+            raise
+        if (p_units is None):
+            print("Require units for pressure")
+            raise
+            
+
     # read-in ensemble member information from JSON file
     with open(ens_dir+'/'+ens_file) as json_file:
         ens=json.load(json_file)
@@ -265,12 +315,14 @@ def main(args):
     if decade > 0:
         ppfiles='*'+str(decade)+'*.pp'
     else:
-        ppfiles='*.pp'
+        ppfiles='*201[45]*.pp'
         
 
     # get listing of files to read-in
     plist=create_indir(ppdir, suiteid, ppstream, ppfiles)
-        
+
+    print("reading field")
+    
     # read-in
     field=iris.load_cube(plist,iris.AttributeConstraint(STASH=STASHcode),callback=CCMI2022_callback)
 
@@ -297,6 +349,23 @@ def main(args):
         # already masked so don't do again
         mask_data=False
 
+    # have provided a Heaviside function, i.e. field contains masked data.
+    if (pressure is not None):
+
+        # take from a different location if necessary
+        if (alt_ppstream is not None):
+            plist=create_indir(ppdir, suiteid, alt_ppstream, ppfiles)
+
+        print("reading pressure")
+        # read-in
+        pressure=iris.load_cube(plist,iris.AttributeConstraint(STASH=pressure))
+
+    print("converting")
+        
+    field=convert_to_pressure(field,pressure,plevels,p_units)
+
+    exit()
+        
     # set positive direction for pressure levels
     try:
         field.coord('pressure').attributes['positive']='down'
