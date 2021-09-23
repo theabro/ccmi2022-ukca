@@ -19,3 +19,8 @@ If all files are in the same directory, the following command will list them by 
 ```
 for i in `ls *.nc | awk -F\_ '{print $1}' | sort -u`; do echo $i `ls ${i}_*.nc | wc`; ls -l ${i}_*.nc ; done | less
 ```
+
+Compile the fortran by
+```
+f2py -c -m pressureconv pressureconv.f90
+```
