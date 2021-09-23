@@ -1,4 +1,4 @@
 begin
-   stash=(51007,51999)
+   stash=51007
    year=[1960..2018]
 end

@@ -7,6 +7,7 @@
         ],
 	"ppdir": "/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022",
 	"ppstream": "ap4.pp",
+        "alt_ppstream" : "apo.pp",
 	"expt_id": "refD1",
 	"source_type": "AER AGCM CHEM"
     }

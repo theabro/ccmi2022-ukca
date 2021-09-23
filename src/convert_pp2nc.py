@@ -177,6 +177,18 @@ def mask_outside_valid_range(cube):
 
     return cube
 
+def create_indir(ppdir, suiteid, ppstream, ppfiles):
+    # create list of files to read, might be in several directories
+    plist=[]
+    for i in suiteid:
+        test_path=ppdir+'/'+i+'/'+ppstream+'/'+ppfiles
+        # check that there are actually files in the path
+        if glob.glob(test_path):
+            plist.append(test_path)
+            
+    return plist
+
+
 def main(args):
     # global variables (used in Callback)
     global in_units
@@ -216,7 +228,6 @@ def main(args):
     except:
         pass
     
-    
     # read-in ensemble member information from JSON file
     with open(ens_dir+'/'+ens_file) as json_file:
         ens=json.load(json_file)
@@ -225,6 +236,12 @@ def main(args):
     suiteid=ens['EM']['suiteid']
     ppdir=str(ens['EM']['ppdir'])
     ppstream=str(ens['EM']['ppstream'])
+    # alternative directory containing e.g. heaviside function
+    alt_ppstream=None
+    try:
+        alt_ppstream=str(ens['EM']['alt_ppstream'])
+    except:
+        pass
     expt_id=str(ens['EM']['expt_id'])
     source_type=str(ens['EM']['source_type'])
     
@@ -251,13 +268,8 @@ def main(args):
         ppfiles='*.pp'
         
 
-    # create list of files to read, might be in several directories
-    plist=[]
-    for i in suiteid:
-        test_path=ppdir+'/'+i+'/'+ppstream+'/'+ppfiles
-        # check that there are actually files in the path
-        if glob.glob(test_path):
-            plist.append(test_path)
+    # get listing of files to read-in
+    plist=create_indir(ppdir, suiteid, ppstream, ppfiles)
         
     # read-in
     field=iris.load_cube(plist,iris.AttributeConstraint(STASH=STASHcode),callback=CCMI2022_callback)
@@ -271,6 +283,12 @@ def main(args):
 
     # have provided a Heaviside function, i.e. field contains masked data.
     if (heaviside is not None):
+
+        # take from a different location if necessary
+        if (alt_ppstream is not None):
+            plist=create_indir(ppdir, suiteid, alt_ppstream, ppfiles)
+
+        # read-in
         heaviside=iris.load_cube(plist,iris.AttributeConstraint(STASH=heaviside))
         # divide by Heaviside function - will create masked_array
         field.data=np.ma.masked_invalid(field.data/heaviside.data)
