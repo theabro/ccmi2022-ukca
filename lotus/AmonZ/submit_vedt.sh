@@ -1,6 +1,6 @@
 #!/bin/bash 
 #SBATCH --partition=short-serial
-#SBATCH --time=12:00:00
+#SBATCH --time=06:00:00
 
 # run python
 module load jaspy/3.7

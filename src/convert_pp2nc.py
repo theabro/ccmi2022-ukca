@@ -203,15 +203,159 @@ def create_indir(ppdir, suiteid, ppstream, ppfiles):
             
     return plist
 
+def compare_lat_lon_ht(cube,pcube):
+
+    # Tolerance for checking whether cubes are equal. These just happen to
+    # be the numpy defaults
+    rtol = 1.0e-05
+    atol = 1.0e-08
+
+    # Check height
+    if len(cube.coord('level_height').points) != len(pcube.coord('level_height').points):
+        raise ValueError("Coordinates level_height for %s and %s do not match!" % (cube.name(), pcube.name()))
+    # Do the points match
+    elif not (np.allclose(cube.coord('level_height').points, pcube.coord('level_height').points, rtol=rtol, atol=atol)):
+        raise ValueError("Coordinates level_height for %s and %s do not match!" % (cube.name(), pcube.name()))
+
+    # Check latitude
+    if len(cube.coord('latitude').points) != len(pcube.coord('latitude').points):
+        raise ValueError("Coordinates latitude for %s and %s do not match!" % (cube.name(), pcube.name()))
+    # Do the points match
+    elif not (np.allclose(cube.coord('latitude').points, pcube.coord('latitude').points, rtol=rtol, atol=atol)):
+        raise ValueError("Coordinates latitude for %s and %s do not match!" % (cube.name(), pcube.name()))
+
+    # Check longitude
+    if len(cube.coord('longitude').points) != len(pcube.coord('longitude').points):
+        raise ValueError("Coordinates longitude for %s and %s do not match!" % (cube.name(), pcube.name()))
+    # Do the points match
+    elif not (np.allclose(cube.coord('longitude').points, pcube.coord('longitude').points, rtol=rtol, atol=atol)):
+        raise ValueError("Coordinates longitude for %s and %s do not match!" % (cube.name(), pcube.name()))
+
+
 def convert_to_pressure(cube,pcube,plevs,punit):
+    # Use f2py pressureconv to convert to plevels
+    import pressureconv
+
+    # rather than construct a completly new cube we will re-use the existing one and then 
+    # re-jig the Z dimension to now be the correct number of pressure levels
 
     # make a new cube with 39 levels
-    newcube=cube.extract(iris.Constraint(model_level_number=lambda cell: 0 < cell < 40))
+    newcube=cube.extract(iris.Constraint(model_level_number=lambda cell: 0 < cell < len(plevs)+1))
 
     # define pressure coordinate
-    pressure=iris.coords.DimCoord(plevels,standard_name=None,long_name="pressure",var_name="pressure",units=cf_units.Unit(punit),attributes={"positive":"down"})
+    pressure=iris.coords.DimCoord(plevs,standard_name=None,long_name="pressure",var_name="pressure",units=cf_units.Unit(punit),attributes={"positive":"down"})
 
-    print(newcube)
+    # remove old height coordinates and then replace with the pressure coordinate
+    newcube.remove_coord("model_level_number")
+    newcube.remove_coord("level_height")
+    newcube.remove_coord("sigma")
+
+    # add pressure as new height co-ordinate
+    newcube.add_dim_coord(pressure,1)
+
+    # Check that the lat, lon & heights of the field & pressure cubes match otherwise we can't interpolate
+    compare_lat_lon_ht(cube,pcube)
+
+    fillval=cube.attributes['missing_value']
+
+    # now actually do the interpolation
+    xmax=len(cube.coord('longitude').points)
+    ymax=len(cube.coord('latitude').points)
+    zmax=len(cube.coord('level_height').points)
+    tmax=len(cube.coord('time').points)
+    pmax=len(plevs)
+    newcube.data = np.ma.masked_values(x=np.array(pressureconv.convert_height2pressure(xmax=xmax,ymax=ymax,
+                                                                                       zmax=zmax,tmax=tmax,
+                                                                                       pmax=pmax,plevels=plevs, 
+                                                                                       vv=cube.data, pp=pcube.data, 
+                                                                                       fillval=fillval), 
+                                                  dtype=np.float32),
+                                       value=fillval)
+
+    return newcube
+
+
+def fix_dimensions(cube):
+    
+    # first, check to see if longitude should exist, and if it shouldn't, remove it
+    if ("longitude" not in cube.attributes['dimensions']):
+        if (len(cube.coord('longitude').points) == 1):
+            cube=cube.extract(iris.Constraint(longitude=cube.coord('longitude').points[0]))
+        else:
+            print("Longitude not in requested dimensions but is not of length 1")
+            raise
+    else:
+        cube.coord('longitude').points=np.array(cube.coord('longitude').points,dtype=np.float64)
+        cube.coord('longitude').rename(str(coords["axis_entry"]["longitude"]["standard_name"]))
+        cname=str(coords["axis_entry"]["longitude"]["standard_name"])
+        cube.coord(cname).attributes["stored_direction"]=str(coords["axis_entry"]["longitude"]["stored_direction"])
+        cube.coord(cname).standard_name=str(coords["axis_entry"]["longitude"]["standard_name"])
+        cube.coord(cname).long_name=str(coords["axis_entry"]["longitude"]["long_name"])
+        cube.coord(cname).var_name=str(coords["axis_entry"]["longitude"]["out_name"])
+        cube.coord(cname).out_name=str(coords["axis_entry"]["longitude"]["out_name"])
+
+
+    # latitude
+    cube.coord('latitude').points=np.array(cube.coord('latitude').points,dtype=np.float64)
+    cube.coord('latitude').rename(str(coords["axis_entry"]["latitude"]["standard_name"]))
+    cname=str(coords["axis_entry"]["latitude"]["standard_name"])
+    cube.coord(cname).attributes["stored_direction"]=str(coords["axis_entry"]["latitude"]["stored_direction"])
+    cube.coord(cname).standard_name=str(coords["axis_entry"]["latitude"]["standard_name"])
+    cube.coord(cname).long_name=str(coords["axis_entry"]["latitude"]["long_name"])
+    cube.coord(cname).var_name=str(coords["axis_entry"]["latitude"]["out_name"])
+    cube.coord(cname).out_name=str(coords["axis_entry"]["latitude"]["out_name"])
+
+    # time
+    cube.coord('time').points=np.array(cube.coord('time').points,dtype=np.float64)
+    cube.coord('time').rename(str(coords["axis_entry"]["time"]["standard_name"]))
+    cname=str(coords["axis_entry"]["time"]["standard_name"])
+    cube.coord(cname).attributes["stored_direction"]=str(coords["axis_entry"]["time"]["stored_direction"])
+    cube.coord(cname).standard_name=str(coords["axis_entry"]["time"]["standard_name"])
+    cube.coord(cname).long_name=str(coords["axis_entry"]["time"]["long_name"])
+    cube.coord(cname).var_name=str(coords["axis_entry"]["time"]["out_name"])
+    cube.coord(cname).out_name=str(coords["axis_entry"]["time"]["out_name"])
+
+
+    # Z coords tricky - many not have them
+    try:
+        # check we are working on a pressure-level cube
+        if ((cube.coords(axis="Z")[0].name() == "pressure") or ("Pa" in str(cube.coords(axis="Z")[0].units))):
+            # now check pressure-level dimensions to see if they exist
+            lev_type=[s for s in cube.attributes['dimensions'].split() if "plev" in s][0]
+            
+            # now take information from JSON coordindate information
+            cname=cube.coords(axis="Z")[0].name()
+            cube.coord(cname).points=np.array(cube.coord(cname).points,dtype=np.float64)
+            cube.coord(cname).rename(str(coords["axis_entry"][lev_type]["standard_name"]))
+            cname=str(coords["axis_entry"][lev_type]["standard_name"])
+            cube.coord(cname).convert_units(str(coords["axis_entry"][lev_type]["units"]))
+            cube.coord(cname).attributes["positive"]=str(coords["axis_entry"][lev_type]["positive"])
+            cube.coord(cname).standard_name=str(coords["axis_entry"][lev_type]["standard_name"])
+            cube.coord(cname).long_name=str(coords["axis_entry"][lev_type]["long_name"])
+            cube.coord(cname).var_name=str(coords["axis_entry"][lev_type]["out_name"])
+            cube.coord(cname).out_name=str(coords["axis_entry"][lev_type]["out_name"])
+        else:
+            # considering a hybrid height variable or a variable without any height at all
+            lev_type='hybrid_height'
+            cname='level_height'
+            # dealing with a level height cube
+            if (len(cube.coord(cname).points) > 1):
+                cube.coord(cname).rename(str(coords["axis_entry"][lev_type]["standard_name"]))
+                cname=str(coords["axis_entry"][lev_type]["standard_name"])
+                cube.coord(cname).points=np.array(cube.coord(cname).points,dtype=np.float64)
+                cube.coord(cname).convert_units(str(coords["axis_entry"][lev_type]["units"]))
+                cube.coord(cname).attributes["positive"]=str(coords["axis_entry"][lev_type]["positive"])
+                cube.coord(cname).attributes["formula"]=str(coords["axis_entry"][lev_type]["formula"])
+                cube.coord(cname).attributes["computed_standard_name"]=str(coords["axis_entry"][lev_type]["computed_standard_name"])
+                cube.coord(cname).attributes["stored_direction"]=str(coords["axis_entry"][lev_type]["stored_direction"])
+                cube.coord(cname).attributes["z_bounds_factors"]=str(coords["axis_entry"][lev_type]["z_bounds_factors"])
+                cube.coord(cname).attributes["z_factors"]=str(coords["axis_entry"][lev_type]["z_factors"])
+                cube.coord(cname).standard_name=str(coords["axis_entry"][lev_type]["standard_name"])
+                cube.coord(cname).long_name=str(coords["axis_entry"][lev_type]["long_name"])
+                cube.coord(cname).var_name=str(coords["axis_entry"][lev_type]["out_name"])
+                cube.coord(cname).out_name=str(coords["axis_entry"][lev_type]["out_name"])
+    except:
+        pass
 
     return cube
 
@@ -222,7 +366,11 @@ def main(args):
     global conversion_factor
     global entries
     global var
+    global coords
     
+    # used if need to append things to the history attribute
+    history=None
+
     # define directories containing things
     # output directory
     odir=args.odir
@@ -310,19 +458,23 @@ def main(args):
     with open(json_dir+'/'+json_file) as json_file:
         CV=json.load(json_file)
     
+    # read-in JSON co-ordinate information
+    json_file='CCMI2022_coordinate.json'
+    with open(json_dir+'/'+json_file) as json_file:
+        coords=json.load(json_file)
+    
+
     # define start and number of ppfiles to take
     decade=np.int(args.decade/10)
     if decade > 0:
         ppfiles='*'+str(decade)+'*.pp'
     else:
-        ppfiles='*201[45]*.pp'
+        ppfiles='*.pp'
         
 
     # get listing of files to read-in
     plist=create_indir(ppdir, suiteid, ppstream, ppfiles)
 
-    print("reading field")
-    
     # read-in
     field=iris.load_cube(plist,iris.AttributeConstraint(STASH=STASHcode),callback=CCMI2022_callback)
 
@@ -349,23 +501,32 @@ def main(args):
         # already masked so don't do again
         mask_data=False
 
-    # have provided a Heaviside function, i.e. field contains masked data.
+    # have provided a pressure field for interpolation i.e. field will contain masked data eventually.
     if (pressure is not None):
 
+        # now need to set missing data attributes
+        field.attributes['missing_value'] = np.float64(entries['Header']['missing_value'])
+ 
         # take from a different location if necessary
         if (alt_ppstream is not None):
             plist=create_indir(ppdir, suiteid, alt_ppstream, ppfiles)
 
-        print("reading pressure")
         # read-in
         pressure=iris.load_cube(plist,iris.AttributeConstraint(STASH=pressure))
 
-    print("converting")
+        # now convert to pressure levels from hybrid height
+        field=convert_to_pressure(field,pressure,plevels,p_units)
         
-    field=convert_to_pressure(field,pressure,plevels,p_units)
+        history=" Post-processed by interpolating to pressure levels."
 
-    exit()
-        
+        # already masked so don't do again
+        mask_data=False
+
+        if ("Z" in stream):
+            # we need to zonally-mean the field
+            field=field.collapsed('longitude',iris.analysis.MEAN)
+
+         
     # set positive direction for pressure levels
     try:
         field.coord('pressure').attributes['positive']='down'
@@ -382,6 +543,10 @@ def main(args):
     # convert units of data if required
     field=convert_units(field)
 
+    # append history if required
+    if (history is not None):
+        ga.attrs['history']=ga.attrs['history']+history
+
     # set a valid min/max & mask outside this if required
     if (mask_data):
         field=mask_outside_valid_range(field)
@@ -396,6 +561,9 @@ def main(args):
                 dcoord=s.rsplit(':',1)[0]
                 cm_t=cm_t+(iris.coords.CellMethod(method='mean', coords=dcoord),)
         field.cell_methods=cm_t
+
+    # fix the dimensions of the cube prior to writing out the cube
+    field=fix_dimensions(field)
 
     # save variable to NetCDF in correct directory
     save_field(field, ga, odir, start_time, end_time)
