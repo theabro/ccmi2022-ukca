@@ -4,7 +4,7 @@
 	"in_units": "kg kg-1",
 	"conversion_factor": 0.6213,
 	"STASHcode": "m01s00i010",
-	"grid_label": "gn",
+	"grid_label": "grz",
 	"pressure" : "m01s00i408",
 	"plevels" : [1.00e+05, 9.25e+04, 8.50e+04, 7.00e+04, 6.00e+04, 
 		     5.00e+04, 4.00e+04, 3.00e+04, 2.50e+04, 2.00e+04, 
