@@ -24,3 +24,5 @@ Compile the fortran by
 ```
 f2py -c -m pressureconv pressureconv.f90
 ```
+
+The script `cly_bry.py` should be used separately once the corresponding Cl & Br species AmonZ files have been written to constructed the summed Cly & Bry files. 
