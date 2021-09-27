@@ -7,7 +7,7 @@ The NetCDF files created are viewable by `Xconv` or `ncview`. If the files have 
 
 When using the `DECADE` variable for submitting to lotus, use the following command, e.g.
 ```
-for i in `seq 1960 10 2010`; do echo $i; sbatch --export=ALL,DECADE=$i ~/git/ccmi2022-ukca/lotus/submit_o3_r2.sh ; done
+for i in `seq 1960 10 2010`; do echo $i; sbatch --export=ALL,DECADE=$i ~/git/ccmi2022-ukca/lotus/Amon/submit_o3_r2.sh ; done
 ```
 
 To extract the variables from the MASS dataset, use the following `moo select` command, e.g.
