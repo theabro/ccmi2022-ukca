@@ -2,7 +2,7 @@
 #SBATCH --partition=high-mem
 #SBATCH -o %j.out 
 #SBATCH -e %j.err
-#SBATCH --time=1:00:00
+#SBATCH --time=1:30:00
 #SBATCH --mem=24000
 
 # run python
