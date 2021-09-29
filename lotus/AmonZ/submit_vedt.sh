@@ -1,6 +1,7 @@
 #!/bin/bash 
-#SBATCH --partition=short-serial
+#SBATCH --partition=high-mem
 #SBATCH --time=12:00:00
+#SBATCH --mem=24000
 
 # run python
 module load jaspy/3.7
