@@ -3,7 +3,7 @@
 UKCA scripts for data conversion for CCMI2022. These are based on the [PPNC tool](https://github.com/rcurr/ppnc) written for CCMI1.
 
 
-# Technical information
+## Technical information
 
 For use on JASMIN platform with the module `jaspy/3.7`.
 
@@ -15,7 +15,7 @@ f2py -c -m pressureconv pressureconv.f90
 The NetCDF files created are viewable by `Xconv` or `ncview`. If the files have been created in an iPython environment they may not work with Xconv - the reasons for this are currently unknown.
 
 
-# Using these scripts
+## Using these scripts
 
 To convert a variable considering all possible times you run these scripts like
 ```
@@ -34,7 +34,7 @@ There are a large number of different scripts in the `lotus` directory for submi
 The script [cly_bry.py](src/cly_bry.py) should be used separately once the corresponding Cl & Br species AmonZ files have been written to construct the summed Cly & Bry files. This can be run on the command line.
 
 
-## Available command-line options
+### Available command-line options
 
 Option | Description
 -------|-------------
@@ -48,7 +48,7 @@ Option | Description
 `-d` / `--decade` | Decade to start taking data from, e.g. `1960`, `1990`, `2010` etc. Using a value of **0** (default) will result in all time points being considered.
 
 
-# Extracting fields from pp files on MASS using `moo select`
+## Extracting fields from pp files on MASS using `moo select`
 
 To extract the variables from the MASS dataset, use the following `moo select` command, e.g.
 ```
@@ -56,7 +56,7 @@ nohup moo select -v -I /home/users/nlabraham/git/ccmi2022-ukca/stash/ccmi2022_v4
 ```
 
 
-# Output files
+## Output files
 
 Output files will be placed in a directory structure from a base directory, e.g.
 ```
@@ -70,7 +70,7 @@ for i in `ls *.nc | awk -F\_ '{print $1}' | sort -u`; do echo $i `ls ${i}_*.nc |
 ```
 
 
-# How the scripts are controlled
+## How the scripts are controlled
 
 Information on how the files should be output, including various metadata values and information on the co-ordinates, are taken from Tables provided in the [ccmi-2022](https://github.com/cedadev/ccmi-2022) repository. The scripts read from a local copy.
 
