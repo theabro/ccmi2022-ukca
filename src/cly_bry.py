@@ -109,7 +109,7 @@ for var in var_list:
         iris_version=str(iris.__version__)
 
         # define global attributes for output file
-        ga=global_attrs.global_attrs(suiteid, str(cube.var_name), iris_version, CV, member=ens_member, table=stream, expt_id=cube.attributes['experiment_id'], grid_label=cube.attributes['grid_label'], source_type=cube.attributes['source_type'], model_name=cube.attributes['source_id'])
+        ga=global_attrs.global_attrs(suiteid, str(cube.var_name), iris_version, CV, member=int(ens_member), table=stream, expt_id=cube.attributes['experiment_id'], grid_label=cube.attributes['grid_label'], source_type=cube.attributes['source_type'], model_name=cube.attributes['source_id'])
 
         # comment that we've summed-up fields and which ones
         ga.attrs['history']=ga.attrs['history']+history
