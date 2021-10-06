@@ -180,6 +180,9 @@ def convert_units(cube):
             divcube = cube / density
             cube.data = divcube.data
 
+    # ensure that cube data is 32-bit
+    cube.data = np.float32(cube.data)
+
     return cube
     
 def mask_outside_valid_range(cube):
