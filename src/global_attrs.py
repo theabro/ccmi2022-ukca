@@ -35,7 +35,7 @@ class global_attrs():
             'experiment': 'Hindcast', # ‘Hindcast’, ‘Baseline projection using…’ (see CV.json for permitted options)
             'experiment_id': expt_id, # ‘refD1’, ‘refD2’, ‘senD2-geo’, ‘senD2-ssp126’, ‘senD2-ssp370’
             'forcing_index': 2,
-            'frequency': 'mon',  # e.g. 'yr', 'mon', 'day', 'subhr', 'fx' (for time-independent fields). Most of this data will be 'mon'. It's probably possible to work this out from the time points of the data.',
+            'frequency': 'day',  # e.g. 'yr', 'mon', 'day', 'subhr', 'fx' (for time-independent fields). Most of this data will be 'mon'. It's probably possible to work this out from the time points of the data.',
             'grid': 'N96L85 hybrid-theta (1.25 latitude by 1.875 longitude with 85 vertical levels up to 85km)',
             'grid_label': grid_label, # ‘gm’, ‘gn’, ‘gnz’, ‘gr’ (see CV.json for permitted options)
             'initialization_index': 1,
