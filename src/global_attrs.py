@@ -22,7 +22,7 @@ import os.path
 from datetime import datetime
 import uuid
 
-data_version='20211006'
+data_version='20220413'
 
 class global_attrs():
     def __init__(self, suiteid, variable_name, iris_version, CV, member=1, table='Amon', expt_id='refD1', grid_label='gn', source_type='AER AGCM CHEM', model_name='UKESM1-StratTrop'):
