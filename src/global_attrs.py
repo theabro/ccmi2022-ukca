@@ -26,6 +26,16 @@ data_version='20211006'
 
 class global_attrs():
     def __init__(self, suiteid, variable_name, iris_version, CV, member=1, table='Amon', expt_id='refD1', grid_label='gn', source_type='AER AGCM CHEM', model_name='UKESM1-StratTrop'):
+        # determine frequency from table
+        if 'mon' in table:
+            freq='mon'
+        elif 'day' in table:
+            freq='day'
+        else:
+            print("cannot determine frequency from table")
+            print(freq)
+            raise
+        # set global attributes
         self.attrs = {
             'activity_id': 'CCMI2022',
             'contact': 'N. Luke Abraham <n.luke.abraham@ncas.ac.uk>, James Keeble <james.keeble@ncas.ac.uk>',
@@ -35,7 +45,7 @@ class global_attrs():
             'experiment': 'Hindcast', # ‘Hindcast’, ‘Baseline projection using…’ (see CV.json for permitted options)
             'experiment_id': expt_id, # ‘refD1’, ‘refD2’, ‘senD2-geo’, ‘senD2-ssp126’, ‘senD2-ssp370’
             'forcing_index': 2,
-            'frequency': 'day',  # e.g. 'yr', 'mon', 'day', 'subhr', 'fx' (for time-independent fields). Most of this data will be 'mon'. It's probably possible to work this out from the time points of the data.',
+            'frequency': freq,  # e.g. 'yr', 'mon', 'day', 'subhr', 'fx' (for time-independent fields). Most of this data will be 'mon'. It's probably possible to work this out from the time points of the data.',
             'grid': 'N96L85 hybrid-theta (1.25 latitude by 1.875 longitude with 85 vertical levels up to 85km)',
             'grid_label': grid_label, # ‘gm’, ‘gn’, ‘gnz’, ‘gr’ (see CV.json for permitted options)
             'initialization_index': 1,

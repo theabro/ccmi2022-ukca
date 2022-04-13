@@ -537,6 +537,12 @@ def main(args):
         pass
 
     # determine start and end time of data in easy to read format
+    # need to guess the time bounds if don't have them
+    try:
+        field.coord('time').guess_bounds()
+    except:
+        pass
+
     start_time=str(field.coord('time').units.num2date(field.coord('time').bounds[0,0])).split(' ')[0].replace('-','')
     end_time=str(field.coord('time').units.num2date(field.coord('time').bounds[-1,-1])).split(' ')[0].replace('-','')
     # required for metadata
