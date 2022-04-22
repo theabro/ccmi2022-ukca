@@ -6,7 +6,7 @@ sid=u-`echo $1 | awk -F\- '{print $NF}'`
 sdir=/home/users/nlabraham/git/ccmi2022-ukca/stash
 
 # can get all of apo
-nohup moo get -v moose:/crum/${sid}/apo.pp/*.pp ./apo.pp/. &> ../apo.get 2>&1 &
+nohup moo get -v moose:/crum/${sid}/apo.pp/*.pp ./apo.pp/. &> apo.get 2>&1 &
 
 # selects - apn stream is split across multiple dirs
 nohup moo select -v ${sdir}/ccmi2022_v1.stash moose:/crum/${sid}/apn.pp ./apn.pp &> v1.sel 2>&1 &
