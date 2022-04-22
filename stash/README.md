@@ -13,4 +13,4 @@
 | ccmi2022_v6_2000s.stash | | |	|
 | ccmi2022_v6_2010s.stash | | |	|
 | ccmi2022_v6_9dec.stash  | | |	|
-| GET command - ALL FILES | apo.pp  | monthly files (p levs) | `nohup moo get -v moose:/crum/u-cj037/apo.pp/*.pp . &> ../apo.get 2>&1 &` |
+| GET command - ALL FILES | apo.pp  | monthly files (p levs) | `nohup moo get -v moose:/crum/u-cj037/apo.pp/*.pp ./apo.pp/. &> ../apo.get 2>&1 &` |
