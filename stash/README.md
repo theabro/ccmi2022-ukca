@@ -9,7 +9,7 @@
 | ccmi2022_v6_1960s.stash | | | |
 | ccmi2022_v6_1970s.stash | | | |
 | ccmi2022_v6_1980s.stash | | | |
-| ccmi2022_v6_1990s.stash | apr.pp | daily files (p levs) | |
+| ccmi2022_v6_1990s.stash | apr.pp | daily files (p levs) | e.g. `nohup moo select -v /home/users/nlabraham/git/ccmi2022-ukca/stash/ccmi2022_v6_2010s.stash moose:/crum/u-cj037/apr.pp ./apr.pp &> v6_2010s.sel 2>&1 &` |
 | ccmi2022_v6_2000s.stash | | |	|
 | ccmi2022_v6_2010s.stash | | |	|
 | ccmi2022_v6_9dec.stash  | | |	|
