@@ -1,0 +1,12 @@
+{
+    "EM": {
+	"ens_member": 2,
+        "suiteid": [
+            "u-ci147"
+        ],
+	"ppdir": "/gws/nopw/j04/ukca_vol2/nlabraham/CCMI2022",
+	"ppstream": "apr.pp",
+	"expt_id": "refD2",
+	"source_type": "AER AOGCM CHEM"
+    }
+}
